@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme) => ({
     border: 0,
     color: 'white',
     height: 48,
-    padding: '0 18px',
+    padding: '0 30px',
     boxShadow: '0 3px 5px 2px rgb(125, 195, 245, .4)'
   },
   buttonTwo: {
@@ -33,22 +33,22 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function SignupForm(props) {
+function LoginForm(props) {
   const classes = useStyles()
 
   return (
     <div>
       <div className='subtitle-and-instructions'>
-        <h2 className='login-page-subtitle'>Create Account</h2>
+        <h2 className='login-page-subtitle'>Login</h2>
         <div>
-          <p>{props.signupInstructions}</p>
+          <p>{props.loginInstructions}</p>
         </div>
       </div>
 
       <Box display='flex' justifyContent='center' alignItems='center'>
         <TextField
-          id='signupUsername'
-          name='signupUsername'
+          id='loginUsername'
+          name='loginUsername'
           label='Username'
           InputProps={{ classes: classes }}
           onChange={props.handleInputChange}
@@ -58,20 +58,9 @@ function SignupForm(props) {
 
       <Box display='flex' justifyContent='center' alignItems='center'>
         <TextField
-          id='signupEmail'
-          name='signupEmail'
-          label='Email'
-          InputProps={{ classes: classes }}
-          onChange={props.handleInputChange}
-          value={props.usernameValue}
-        />
-      </Box>
-
-      <Box display='flex' justifyContent='center' alignItems='center'>
-        <TextField
           type='password'
-          id='signupPassword'
-          name='signupPassword'
+          id='loginPassword'
+          name='loginPassword'
           label='Password'
           InputProps={{ classes: classes }}
           onChange={props.handleInputChange}
@@ -79,22 +68,22 @@ function SignupForm(props) {
         />
       </Box>
 
-      <Box display='flex' justifyContent='center' alignItems='center' paddingTop='15px'>
+      <Box display='flex' justifyContent='center' alignItems='center' paddingTop='20px'>
         <Button
           variant='contained'
           onClick={props.handleFormSubmit}
           id='login-button'
           classes={{ root: classes.button }}
         >
-          Create Account
+          Sign In
         </Button>
       </Box>
 
       <Box marginTop='60px'>
         <div className='subtitle-and-instructions'>
-          <p>Already a member?</p>
-          <Button variant='contained' href='/' classes={{ root: classes.buttonTwo }}>
-            LOG IN
+          <p>First time here?</p>
+          <Button variant='contained' href='/signup' classes={{ root: classes.buttonTwo }}>
+            SIGN UP
           </Button>
         </div>
       </Box>
@@ -102,4 +91,4 @@ function SignupForm(props) {
   )
 }
 
-export default SignupForm
+export default LoginForm

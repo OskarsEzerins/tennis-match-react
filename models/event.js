@@ -1,5 +1,5 @@
 module.exports = function (sequelize, DataTypes) {
-  var Event = sequelize.define("Event", {
+  var Event = sequelize.define('Event', {
     title: {
       type: DataTypes.STRING,
       allowNull: false
@@ -33,7 +33,7 @@ module.exports = function (sequelize, DataTypes) {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     }
-  });
+  })
 
   Event.associate = function (models) {
     Event.belongsTo(models.User, {
@@ -45,7 +45,7 @@ module.exports = function (sequelize, DataTypes) {
         as: 'secondUser',
         foreignKey: 'confirmedByUser'
       })
-  };
+  }
 
-  return Event;
-};
+  return Event
+}

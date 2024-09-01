@@ -1,5 +1,6 @@
-import React from "react";
-import "./style.css";
+import React from 'react'
+
+import './style.css'
 
 // The Thumbnail component renders a div that uses some CSS to render a background image
 // It will always keep square proportions at any size without the image warping
@@ -7,14 +8,14 @@ import "./style.css";
 function Thumbnail({ src }) {
   return (
     <div
-      className="thumbnail"
-      role="img"
-      aria-label="Event Players Image"
+      className='thumbnail'
+      role='img'
+      aria-label='Event Players Image'
       style={{
         backgroundImage: `url(${src})`
       }}
     />
-  );
+  )
 }
 
-export default Thumbnail;
+export default Thumbnail
