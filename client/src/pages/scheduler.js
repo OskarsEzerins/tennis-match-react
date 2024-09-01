@@ -12,6 +12,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { Container, Box } from '@material-ui/core'
+import moment from 'moment'
 
 class Scheduler extends Component {
   state = {

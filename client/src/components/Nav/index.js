@@ -24,7 +24,7 @@ export default function Nav(props) {
   const classes = useStyles()
   const [value, setValue] = React.useState(props.value)
 
-  const handleChange = (event, newValue) => {
+  const handleChange = (event, _newValue) => {
     setValue(event.target.value)
   }
 

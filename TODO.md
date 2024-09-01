@@ -1,0 +1,3 @@
+- Change date format to DD-MM-YYYY
+- Change clock format
+- Add a redirect to smth after availability has been added

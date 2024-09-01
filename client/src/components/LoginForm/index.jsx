@@ -4,7 +4,7 @@ import './style.css'
 
 import { makeStyles, TextField, Button, Box } from '@material-ui/core'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((_theme) => ({
   input: {
     '&:-webkit-autofill': {
       WebkitBoxShadow: '0 0 0 1000px rgb(144,238,80) inset'
@@ -37,7 +37,7 @@ function LoginForm(props) {
   const classes = useStyles()
 
   return (
-    <div>
+    <form>
       <div className='subtitle-and-instructions'>
         <h2 className='login-page-subtitle'>Login</h2>
         <div>
@@ -50,6 +50,7 @@ function LoginForm(props) {
           id='loginUsername'
           name='loginUsername'
           label='Username'
+          autoComplete='username'
           InputProps={{ classes: classes }}
           onChange={props.handleInputChange}
           value={props.usernameValue}
@@ -62,11 +63,14 @@ function LoginForm(props) {
           id='loginPassword'
           name='loginPassword'
           label='Password'
+          autoComplete='current-password'
           InputProps={{ classes: classes }}
           onChange={props.handleInputChange}
           value={props.passwordValue}
         />
       </Box>
+
+      {/* TODO: allow to press enter to submit form */}
 
       <Box display='flex' justifyContent='center' alignItems='center' paddingTop='20px'>
         <Button
@@ -87,7 +91,7 @@ function LoginForm(props) {
           </Button>
         </div>
       </Box>
-    </div>
+    </form>
   )
 }
 
