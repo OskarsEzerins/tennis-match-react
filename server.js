@@ -9,7 +9,7 @@ var db = require('./models')
 
 var PORT = process.env.PORT || 3001
 
-// socket io initialization for chat
+// NOTE: socket io initialization for chat
 io.on('connection', (socket) => {
   //user joins a room
   socket.on('joinRoom', ({ username, room, userId }) => {
@@ -61,7 +61,7 @@ io.on('connection', (socket) => {
   })
 })
 
-// Middleware
+// NOTE: Middleware
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 // app.use(express.static("public"));
@@ -71,6 +71,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(
   session({
+    // TODO: replace
     secret: 'tennis123',
     resave: true,
     saveUninitialized: true,
@@ -88,13 +89,12 @@ app.get('*', (req, res) => {
 
 var syncOptions = { force: false }
 
-// If running a test, set syncOptions.force to true
-// clearing the `testdb`
+// NOTE: If running a test, set syncOptions.force to true, clearing the `test db`
 if (process.env.NODE_ENV === 'test') {
   syncOptions.force = true
 }
 
-// Starting the server, syncing our models ------------------------------------/
+// NOTE: Starting the server, syncing our models ------------------------------------/
 // { force: true }
 db.sequelize.sync().then(function () {
   server.listen(PORT, function () {

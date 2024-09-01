@@ -19,8 +19,7 @@ import Public from '@material-ui/icons/Public'
 import SportsTennisIcon from '@material-ui/icons/SportsTennis'
 import ThumbsUpDownIcon from '@material-ui/icons/ThumbsUpDown'
 import clsx from 'clsx'
-import { withRouter } from 'react-router-dom';
-import Badge from '@material-ui/core/Badge';
+import { withRouter } from 'react-router-dom'
 import io from 'socket.io-client'
 
 const socket = io()
@@ -66,18 +65,13 @@ const Drawer = (props) => {
   const handleLogout = () => {
     fetch('/logout')
       .then((res) => {
-        window.location.href = '/';
+        window.location.href = '/'
       })
       .catch((err) => console.log(err))
   }
 
-  useEffect(() => {
-    getNotifications()
-    connectToSocket()
-  }, [])
-
   const connectToSocket = () => {
-    socket.on('output', data => {
+    socket.on('output', (_data) => {
       fetch('/api/notifications')
         .then((res) => res.json())
         .then((notifications) => {
@@ -100,7 +94,8 @@ const Drawer = (props) => {
   }
 
   const getNotifications = () => {
-    fetch('/api/notifications').then(res => res.json())
+    fetch('/api/notifications')
+      .then((res) => res.json())
       .then((notifications) => {
         if (notifications.messages > 0 || notifications.matches > 0) {
           setNotificationState({
@@ -114,9 +109,13 @@ const Drawer = (props) => {
         }
         const userid = notifications.userid
 
-        socket.emit('notifyMe', userid);
+        socket.emit('notifyMe', userid)
       })
   }
+  useEffect(() => {
+    getNotifications()
+    connectToSocket()
+  }, [])
 
   const itemsList = [
     {

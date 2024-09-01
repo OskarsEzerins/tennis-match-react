@@ -6,9 +6,10 @@ import CalendarEvent from '../utils/CalendarEvent'
 import './style.css'
 import './style.css'
 
+import FullCalendar from '@fullcalendar/react'
+
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import { Container, Box } from '@material-ui/core'
 
