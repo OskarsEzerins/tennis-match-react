@@ -263,7 +263,7 @@ module.exports = function (app) {
     }
   })
 
-  // searching for players with availibility on chosen day
+  // searching for players with availability on chosen day
   app.get('/api/calendar/propose', function (req, res) {
     console.log('DATE!!!!: ' + req.query.date)
     let dateSearch

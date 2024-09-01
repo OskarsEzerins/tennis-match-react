@@ -1,9 +1,8 @@
-import React, { Component } from 'react'
+import React, { useState, useEffect } from 'react'
 
 import { SchedulerModal, EventDetailsModal } from '../components/Modal'
 import Nav from '../components/Nav'
 import CalendarEvent from '../utils/CalendarEvent'
-import './style.css'
 import './style.css'
 
 import FullCalendar from '@fullcalendar/react'
@@ -14,24 +13,18 @@ import timeGridPlugin from '@fullcalendar/timegrid'
 import { Container, Box } from '@material-ui/core'
 import moment from 'moment'
 
-class Scheduler extends Component {
-  state = {
-    savedDates: [],
-    selectedEvent: {},
-    selectedFirstUser: {},
-    selectedSecondUser: {},
-    dateModalShow: false,
-    eventModalShow: false,
-    thisDate: '',
-    navValue: 'tab-three',
-    calendarEvents: []
-  }
+const Scheduler = () => {
+  const [savedDates, setSavedDates] = useState([])
+  const [selectedEvent, setSelectedEvent] = useState({})
+  const [selectedFirstUser, setSelectedFirstUser] = useState({})
+  const [selectedSecondUser, setSelectedSecondUser] = useState({})
+  const [dateModalShow, setDateModalShow] = useState(false)
+  const [eventModalShow, setEventModalShow] = useState(false)
+  const [thisDate, setThisDate] = useState('')
+  const [navValue, _setNavValue] = useState('tab-three')
+  const [calendarEvents, setCalendarEvents] = useState([])
 
-  componentDidMount() {
-    this.getDates()
-  }
-
-  getDates = () => {
+  const getDates = () => {
     fetch('/api/calendar')
       .then((res) => res.json())
       .then((dates) => {
@@ -68,27 +61,29 @@ class Scheduler extends Component {
           tempArr.push(new CalendarEvent(date.id, date.title, date.start, date.color))
         })
 
-        this.setState({ savedDates: calendarEvents, calendarEvents: tempArr })
+        setSavedDates(calendarEvents)
+        setCalendarEvents(tempArr)
       })
       .catch((err) => console.log(err))
   }
+  useEffect(() => {
+    getDates()
+  }, [])
 
-  setModalShow = (mName, bVal) => {
-    this.setState({ [mName]: bVal })
-  }
-
-  handleDateClick = (arg) => {
-    this.setState({ dateModalShow: true, thisDate: arg.dateStr })
+  const handleDateClick = (arg) => {
+    setDateModalShow(true)
+    setThisDate(arg.dateStr)
 
     const selectedDate = moment(arg.dateStr).format('YYYY-MM-DD')
     localStorage.setItem('selectedDate', selectedDate)
   }
 
-  handleEventClick = (arg) => {
-    this.setState({ eventModalShow: true, thisDate: arg.dateStr })
+  const handleEventClick = (arg) => {
+    setEventModalShow(true)
+    setThisDate(arg.dateStr)
     let selectedEventArr = {}
 
-    this.state.savedDates.forEach((date) => {
+    savedDates.forEach((date) => {
       if (date.id == arg.event._def.publicId && date.secondUser) {
         selectedEventArr = { selectedEvent: date, selectedFirstUser: date.User, selectedSecondUser: date.secondUser }
       } else if (date.id == arg.event._def.publicId) {
@@ -100,68 +95,78 @@ class Scheduler extends Component {
       }
     })
 
-    this.setState(selectedEventArr)
+    setSelectedEvent(selectedEventArr.selectedEvent)
+    setSelectedFirstUser(selectedEventArr.selectedFirstUser)
+    setSelectedSecondUser(selectedEventArr.selectedSecondUser)
   }
 
-  deleteEvent = () => {
+  const deleteEvent = () => {
     console.log('clicked on delete')
-    fetch('api/event/delete/' + this.state.selectedEvent.id, {
+    fetch('api/event/delete/' + selectedEvent.id, {
       method: 'DELETE'
     })
-      .then((res) => {
-        this.getDates()
+      .then((_res) => {
+        getDates()
       })
       .catch((err) => {
         console.log(err)
       })
-    this.setState({ eventModalShow: false })
+    setEventModalShow(false)
   }
 
-  render() {
-    return (
-      <div>
-        <Nav value={this.state.navValue} />
-        <Container maxWidth='md'>
-          <Box paddingTop='20px'>
-            <FullCalendar
-              plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-              dateClick={this.handleDateClick}
-              initialView='dayGridMonth'
-              height='auto'
-              events={this.state.calendarEvents}
-              headerToolbar={{
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay'
-              }}
-              eventClick={this.handleEventClick}
-            />
-          </Box>
-          <SchedulerModal
-            show={this.state.dateModalShow}
-            onHide={() => this.setModalShow('dateModalShow', false)}
-            thisDate={moment(this.state.thisDate).format('MMM DD YYYY')}
+  return (
+    <div>
+      <Nav value={navValue} />
+      <Container maxWidth='md'>
+        <Box paddingTop='20px'>
+          <FullCalendar
+            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+            dateClick={handleDateClick}
+            initialView='dayGridMonth'
+            height='auto'
+            events={calendarEvents}
+            timeFormat='HH:mm'
+            slotLabelFormat={{
+              hour: '2-digit',
+              minute: '2-digit',
+              omitZeroMinute: false,
+              meridiem: false,
+              hour12: false
+            }}
+            slotMinTime='06:00:00'
+            slotMaxTime='23:00:00'
+            headerToolbar={{
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay'
+            }}
+            eventClick={handleEventClick}
           />
-          <EventDetailsModal
-            show={this.state.eventModalShow}
-            onHide={() => this.setModalShow('eventModalShow', false)}
-            eventName={this.state.selectedEvent.title}
-            playerOneUsername={this.state.selectedFirstUser.username}
-            playerOneFirst={this.state.selectedFirstUser.firstname}
-            playerOneLast={this.state.selectedFirstUser.lastname}
-            playerTwoUsername={this.state.selectedSecondUser.username}
-            playerTwoFirst={this.state.selectedSecondUser.firstname}
-            playerTwoLast={this.state.selectedSecondUser.lastname}
-            startTime={moment(this.state.selectedEvent.start).format('hh:mm a')}
-            endTime={moment(this.state.selectedEvent.end).format('hh:mm a')}
-            location={this.state.selectedEvent.location}
-            date={moment(this.state.selectedEvent.start).format('MM/DD/YYYY')}
-            handleDelete={this.deleteEvent}
-          />
-        </Container>
-      </div>
-    )
-  }
+        </Box>
+        <SchedulerModal
+          show={dateModalShow}
+          onHide={() => setDateModalShow(false)}
+          thisDate={moment(thisDate).format('MMM DD YYYY')}
+        />
+        <EventDetailsModal
+          show={eventModalShow}
+          onHide={() => setEventModalShow(false)}
+          eventName={selectedEvent.title}
+          playerOneUsername={selectedFirstUser.username}
+          playerOneFirst={selectedFirstUser.firstname}
+          playerOneLast={selectedFirstUser.lastname}
+          playerTwoUsername={selectedSecondUser.username}
+          playerTwoFirst={selectedSecondUser.firstname}
+          playerTwoLast={selectedSecondUser.lastname}
+          startTime={moment(selectedEvent.start).format('hh:mm a')}
+          endTime={moment(selectedEvent.end).format('hh:mm a')}
+          location={selectedEvent.location}
+          date={moment(selectedEvent.start).format('MM/DD/YYYY')}
+          handleDelete={deleteEvent}
+        />
+      </Container>
+    </div>
+  )
 }
 
 export default Scheduler

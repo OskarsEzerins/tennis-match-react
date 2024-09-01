@@ -1,3 +1,23 @@
-- Change date format to DD-MM-YYYY
 - Change clock format
 - Add a redirect to smth after availability has been added
+- Add a map with preselect places and info about places
+- Add/modify Calendar to see proposed match dates and apply
+- Show success when proposed a match and accepted a match (redirect back to calendar?)
+- Limit matches suggested at the same time (no double matches)
+- Add toasts
+- Add text to some buttons (menu)
+- Allow to check who brings the balls
+- Add a mehanism to mark when a court is reserved
+- Add tennis courts info
+- Check or fix updates for user activity
+- Create calendar events
+- Add a way to see all matches
+- Opt out of notifications
+- Send notification when a response to a match is made
+- Allow to select multiple courts
+- Add info in scheduler page that You can click on a date
+
+- Add Discord bot:
+  - Notifications for created availability
+    - (Follow specific users)
+  - Notifications for accepted matches

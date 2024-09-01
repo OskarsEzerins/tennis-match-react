@@ -5,6 +5,7 @@ import Nav from '../components/Nav'
 import ProposeCard from '../components/ProposeCard'
 import ProposeMatchForm from '../components/ProposeMatchForm'
 import ProposeUserSearch from '../components/ProposeUserSearch'
+import { COURT_LIST } from '../utils/constants'
 
 import { Button, Container, Grid, Snackbar } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
@@ -37,7 +38,7 @@ class ProposeMatch extends Component {
     eventTitle: '',
     modalShow: false,
     subsectionShow: '',
-    courtList: ['Fairmount Park', 'Temple', 'FDR Park', 'Chaminoux', 'Allens Lane Park', 'Seger Park']
+    courtList: COURT_LIST
   }
 
   componentDidMount() {
@@ -463,7 +464,7 @@ class ProposeMatch extends Component {
             </Grid>
 
             {/* <button type="button" className="btn mr-2 propose-button" onClick={this.setSubShow} value="date">Search By Date</button>
-                        
+
                         <button type="button" className="btn propose-button" onClick={this.setSubShow} value="player">Propose Match to a Player</button> */}
 
             {this.subsectionRender()}
@@ -518,7 +519,7 @@ class ProposeMatch extends Component {
             {/* {this.state.clickedResult.map(event => (
                         <ProposeModal
                         show={this.state.modalShow}
-                        onHide={() => this.setModalShow(false)} 
+                        onHide={() => this.setModalShow(false)}
                         title={event.title}
                         userid={event.UserId}
                         username={event.User.username}

@@ -75,7 +75,6 @@ export function NewEventForm(props) {
               name='startTime'
               label='Start Time'
               type='time'
-              // defaultValue="17:00"
               value={props.startTime}
               onChange={props.handleInputChange}
               margin='normal'
@@ -84,7 +83,7 @@ export function NewEventForm(props) {
                 shrink: true
               }}
               inputProps={{
-                step: 300 // 5 min
+                step: 300 // NOTE: 5 min
               }}
               fullWidth
             />
@@ -95,7 +94,6 @@ export function NewEventForm(props) {
               name='endTime'
               label='End Time'
               type='time'
-              // defaultValue="17:00"
               value={props.endTime}
               onChange={props.handleInputChange}
               margin='normal'
@@ -104,7 +102,7 @@ export function NewEventForm(props) {
                 shrink: true
               }}
               inputProps={{
-                step: 300 // 5 min
+                step: 300 // NOTE: 5 min
               }}
               fullWidth
             />
