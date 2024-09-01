@@ -36,6 +36,7 @@ export const FeedListItem = ({
 }) => {
   const matchStartMoment = moment(matchStart)
 
+  const matchStartDay = matchStartMoment.format('dddd')
   const matchStartDate = matchStartMoment.format(DEFAULT_DATE_FORMAT)
   const matchStartClock = matchStartMoment.format(DEFAULT_CLOCK_FORMAT)
 
@@ -46,7 +47,7 @@ export const FeedListItem = ({
           <Avatar alt={organizer} src={thumbnail} />
         </ListItemAvatar>
         <ListItemText
-          primary={`${organizer} scheduled a match with ${confirmer} on ${matchStartDate} at ${matchStartClock}`}
+          primary={`${organizer} scheduled a match with ${confirmer} on ${matchStartDay}, ${matchStartDate} at ${matchStartClock}`}
         />
         <ListItemAvatar>
           <Avatar alt={confirmer} src={thumbnail} />
@@ -61,20 +62,24 @@ export function FeedListItemDeny({
   //later replace with hybrid image of both participating players
   thumbnail = 'https://placehold.it/300x300',
   title,
-  month,
-  day,
-  hour,
   okayDeny,
   eventID,
-  confirmer
+  confirmer,
+  matchStart
 }) {
+  const matchStartMoment = moment(matchStart)
+
+  const matchStartDay = matchStartMoment.format('dddd')
+  const matchStartDate = matchStartMoment.format(DEFAULT_DATE_FORMAT)
+  const matchStartClock = matchStartMoment.format(DEFAULT_CLOCK_FORMAT)
+
   return (
     <Paper>
       <ListItem alignItems='flex-start'>
         <ListItemAvatar>
           <Avatar alt={confirmer} src={thumbnail} />
         </ListItemAvatar>
-        <ListItemText primary={`${title}. Proposed for ${month}/${day} at ${hour}`} />
+        <ListItemText primary={`${title}. Proposed for ${matchStartDay}, ${matchStartDate} at ${matchStartClock}`} />
         <Button onClick={okayDeny} data-id={eventID}>
           Ok
         </Button>
