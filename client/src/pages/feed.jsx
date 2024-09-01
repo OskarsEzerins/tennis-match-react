@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 
 import { FeedList, FeedListItem, FeedListItemDeny } from '../components/FeedList'
 import Nav from '../components/Nav'
+import { DEFAULT_CLOCK_FORMAT } from '../utils/dates'
 
 import { Grid, Container } from '@material-ui/core'
 import moment from 'moment'
@@ -79,7 +80,7 @@ const Feed = () => {
                     title={match.title}
                     month={match.start.substring(5, 7)}
                     day={match.start.substring(8, 10)}
-                    hour={moment(match.start).format('h:mm a')}
+                    hour={moment(match.start).format(DEFAULT_CLOCK_FORMAT)}
                     okayDeny={handleDeny}
                     eventID={match.id}
                     confirmer={match.secondUser.username}
@@ -90,9 +91,7 @@ const Feed = () => {
                     key={idx}
                     organizer={match.User.username}
                     confirmer={match.secondUser.username}
-                    month={match.start.substring(5, 7)}
-                    day={match.start.substring(8, 10)}
-                    hour={moment(match.start).format('h:mm a')}
+                    matchStart={match.start}
                   />
                 ))}
               </FeedList>

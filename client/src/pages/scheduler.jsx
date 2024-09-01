@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react'
 
+import Calendar from '../components/Calendar'
 import { SchedulerModal, EventDetailsModal } from '../components/Modal'
 import Nav from '../components/Nav'
 import CalendarEvent from '../utils/CalendarEvent'
+import { DEFAULT_CLOCK_FORMAT, DEFAULT_DATE_FORMAT } from '../utils/dates'
 import './style.css'
 
-import FullCalendar from '@fullcalendar/react'
-
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import timeGridPlugin from '@fullcalendar/timegrid'
 import { Container, Box } from '@material-ui/core'
 import moment from 'moment'
 
@@ -119,29 +116,7 @@ const Scheduler = () => {
       <Nav value={navValue} />
       <Container maxWidth='md'>
         <Box paddingTop='20px'>
-          <FullCalendar
-            plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-            dateClick={handleDateClick}
-            initialView='dayGridMonth'
-            height='auto'
-            events={calendarEvents}
-            timeFormat='HH:mm'
-            slotLabelFormat={{
-              hour: '2-digit',
-              minute: '2-digit',
-              omitZeroMinute: false,
-              meridiem: false,
-              hour12: false
-            }}
-            slotMinTime='06:00:00'
-            slotMaxTime='23:00:00'
-            headerToolbar={{
-              left: 'prev,next today',
-              center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay'
-            }}
-            eventClick={handleEventClick}
-          />
+          <Calendar handleDateClick={handleDateClick} events={calendarEvents} handleEventClick={handleEventClick} />
         </Box>
         <SchedulerModal
           show={dateModalShow}
@@ -158,10 +133,10 @@ const Scheduler = () => {
           playerTwoUsername={selectedSecondUser.username}
           playerTwoFirst={selectedSecondUser.firstname}
           playerTwoLast={selectedSecondUser.lastname}
-          startTime={moment(selectedEvent.start).format('hh:mm a')}
-          endTime={moment(selectedEvent.end).format('hh:mm a')}
+          startTime={moment(selectedEvent.start).format(DEFAULT_CLOCK_FORMAT)}
+          endTime={moment(selectedEvent.end).format(DEFAULT_CLOCK_FORMAT)}
           location={selectedEvent.location}
-          date={moment(selectedEvent.start).format('MM/DD/YYYY')}
+          date={moment(selectedEvent.start).format(DEFAULT_DATE_FORMAT)}
           handleDelete={deleteEvent}
         />
       </Container>

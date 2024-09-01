@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 
 import BottomNav from '../components/BottomNav'
 import Nav from '../components/Nav'
+import { DEFAULT_CLOCK_FORMAT } from '../utils/dates'
 import './style.css'
 
 import {
@@ -467,17 +468,17 @@ class Messenger extends Component {
 
               <Grid container>
                 <Grid item sm={1}></Grid>
-                <Grid item xs={12} sm={10} item={true}>
+                <Grid item xs={12} sm={10}>
                   <List>
-                    {this.state.showMessages.map((message) => (
-                      <Paper>
+                    {this.state.showMessages.map((message, idx) => (
+                      <Paper key={idx}>
                         {message.senderId == this.state.user.userid ? (
                           <ListItem button>
                             <ListItemText
                               primary={`Me: ${message.message}`}
                               secondary={
                                 moment(message.createdAt).format('MMDDYYYY') === moment(new Date()).format('MMDDYYYY')
-                                  ? `Today ${moment(message.createdAt).format('h:mm A')}`
+                                  ? `Today ${moment(message.createdAt).format(DEFAULT_CLOCK_FORMAT)}`
                                   : moment(message.createdAt).format('M/DD/YY')
                               }
                             />
@@ -488,7 +489,7 @@ class Messenger extends Component {
                               primary={`${message.User.username}: ${message.message}`}
                               secondary={
                                 moment(message.createdAt).format('MMDDYYYY') === moment(new Date()).format('MMDDYYYY')
-                                  ? `Today ${moment(message.createdAt).format('h:mm A')}`
+                                  ? `Today ${moment(message.createdAt).format(DEFAULT_CLOCK_FORMAT)}`
                                   : moment(message.createdAt).format('M/DD/YY')
                               }
                             />
@@ -509,7 +510,7 @@ class Messenger extends Component {
   }
 
   render() {
-    const { classes } = this.props
+    const { _classes } = this.props
 
     return (
       <div>

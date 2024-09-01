@@ -11,7 +11,7 @@ import {
   useTheme
 } from '@material-ui/core'
 
-export function SchedulerModal(props) {
+export const SchedulerModal = (props) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
@@ -41,20 +41,12 @@ export function SchedulerModal(props) {
   )
 }
 
-export function EventDetailsModal(props) {
+export const EventDetailsModal = (props) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
-    <Dialog
-      fullScreen={fullScreen}
-      open={props.show}
-      onClose={props.onHide}
-      aria-labelledby='alert-dialog-title'
-      aria-describedby='alert-dialog-description'
-      maxWidth='xs'
-      fullWidth={true}
-    >
+    <Dialog fullScreen={fullScreen} open={props.show} onClose={props.onHide} maxWidth='xs' fullWidth={true}>
       <DialogTitle id='alert-dialog-title'>{props.eventName}</DialogTitle>
       <DialogContent>
         <DialogContentText id='alert-dialog-description'>

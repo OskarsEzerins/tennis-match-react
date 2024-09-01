@@ -6,6 +6,7 @@ import ProposeCard from '../components/ProposeCard'
 import ProposeMatchForm from '../components/ProposeMatchForm'
 import ProposeUserSearch from '../components/ProposeUserSearch'
 import { COURT_LIST } from '../utils/constants'
+import { DEFAULT_CLOCK_FORMAT } from '../utils/dates'
 
 import { Button, Container, Grid, Snackbar } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
@@ -471,7 +472,7 @@ class ProposeMatch extends Component {
 
             <Grid container spacing={3} direction='column' alignItems='center'>
               {this.state.searchResult.map((event, i) => (
-                <Grid item xs={12}>
+                <Grid key={i} item xs={12}>
                   <ProposeCard
                     key={i}
                     title={event.title}
@@ -481,8 +482,8 @@ class ProposeMatch extends Component {
                     userLastname={event.User.lastname}
                     userSkill={event.User.skilllevel}
                     eventLocation={event.location}
-                    starttime={moment(event.start).format('hh:mm a')}
-                    endtime={moment(event.end).format('hh:mm a')}
+                    starttime={moment(event.start).format(DEFAULT_CLOCK_FORMAT)}
+                    endtime={moment(event.end).format(DEFAULT_CLOCK_FORMAT)}
                     eventIndex={i}
                     handleEventClick={this.handleEventClick}
                   />
@@ -492,6 +493,7 @@ class ProposeMatch extends Component {
 
             {this.state.clickedResult.map((event) => (
               <ProposeMuiModal
+                key={event.id}
                 show={this.state.modalShow}
                 onHide={() => this.setModalShow(false)}
                 title={event.title}
@@ -501,8 +503,8 @@ class ProposeMatch extends Component {
                 userLastname={event.User.lastname}
                 eventLocation={this.state.eventLocation}
                 eventLocationTwo={event.location}
-                starttime={moment(event.start).format('hh:mm a')}
-                endtime={moment(event.end).format('hh:mm a')}
+                starttime={moment(event.start).format(DEFAULT_CLOCK_FORMAT)}
+                endtime={moment(event.end).format(DEFAULT_CLOCK_FORMAT)}
                 startIntArr={event.startIntArr}
                 endIntArr={event.endIntArr}
                 startTimeHour={this.state.startTimeHour}
@@ -527,8 +529,8 @@ class ProposeMatch extends Component {
                         userLastname={event.User.lastname}
                         eventLocation={this.state.eventLocation}
                         eventLocationTwo={event.location}
-                        starttime={moment(event.start).format("hh:mm a")}
-                        endtime={moment(event.end).format("hh:mm a")}
+                        starttime={moment(event.start).format(DEFAULT_CLOCK_FORMAT)}
+                        endtime={moment(event.end).format(DEFAULT_CLOCK_FORMAT)}
                         startIntArr={event.startIntArr}
                         endIntArr={event.endIntArr}
                         startTimeHour={this.state.startTimeHour}

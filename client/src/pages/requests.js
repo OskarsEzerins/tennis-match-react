@@ -3,6 +3,7 @@ import React, { Component } from 'react'
 import Nav from '../components/Nav'
 import RequestCard from '../components/RequestCard'
 import RequestDisplay from '../components/RequestDisplay'
+import { DEFAULT_CLOCK_FORMAT } from '../utils/dates'
 
 import { Grid, Container } from '@material-ui/core'
 import moment from 'moment'
@@ -135,7 +136,7 @@ class Requests extends Component {
             </Grid>
             {this.state.searchResult.length !== 0 ? (
               this.state.searchResult.map((event, i) => (
-                <Grid item xs={12}>
+                <Grid key={i} item xs={12}>
                   <RequestCard
                     key={i}
                     title={event.title}
@@ -147,8 +148,8 @@ class Requests extends Component {
                     eventLocation={event.location}
                     fullStarttime={event.start}
                     fullEndtime={event.end}
-                    starttime={moment(event.start).format('hh:mm a')}
-                    endtime={moment(event.end).format('hh:mm a')}
+                    starttime={moment(event.start).format(DEFAULT_CLOCK_FORMAT)}
+                    endtime={moment(event.end).format(DEFAULT_CLOCK_FORMAT)}
                     date={moment(event.start).format('L')}
                     eventId={event.id}
                     handleInputChange={this.handleInputChange}
