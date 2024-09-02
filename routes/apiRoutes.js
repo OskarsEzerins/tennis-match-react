@@ -166,7 +166,6 @@ module.exports = function (app) {
     }
   })
 
-  // create event
   app.post('/api/calendar', function (req, res) {
     if (req.session.loggedin) {
       let requestData = req.body
@@ -174,12 +173,23 @@ module.exports = function (app) {
       db.Event.create(requestData)
         .then(function (results) {
           res.send({
-            statusString: 'eventCreated'
+            statusString: 'eventCreated',
+            results
           })
         })
-        .catch((err) => res.send(err))
+        .catch((err) => {
+          console.error('Error creating event:', err)
+          res.status(500).send({
+            statusString: 'error',
+            message: 'Failed to create event',
+            error: err.message
+          })
+        })
     } else {
-      res.status(400).end()
+      res.status(400).send({
+        statusString: 'error',
+        message: 'User not logged in'
+      })
     }
   })
 

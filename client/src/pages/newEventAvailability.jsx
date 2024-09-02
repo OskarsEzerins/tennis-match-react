@@ -49,12 +49,12 @@ const NewEvent = () => {
   }
 
   const handleSoftReset = () => {
-    setNewDate('')
     setStartTime('17:00')
     setEndTime('18:00')
   }
 
   const handleReset = () => {
+    setNewDate('')
     handleSoftReset()
     setEventTitle('')
     setEventLocation('')
@@ -94,11 +94,12 @@ const NewEvent = () => {
 
       const res = await response.json()
 
-      if (res.statusString === 'eventCreated') {
+      if (res.statusString === 'error') {
+        // showToast(`Oops! ${err.error}`, 'error', 'error')
+        showToast(`Oops! ${res.error}`, 'error', 'error')
+      } else {
         handleSoftReset()
         showToast('Your availability has been successfully updated!', 'success')
-      } else {
-        showToast('Oops! Something went wrong. Please try again.', 'error')
       }
     } catch (err) {
       showToast('Oops! Something went wrong. Please try again.', 'error')

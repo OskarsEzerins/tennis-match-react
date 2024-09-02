@@ -94,8 +94,7 @@ if (process.env.NODE_ENV === 'test') {
   syncOptions.force = true
 }
 
-// NOTE: Starting the server, syncing our models ------------------------------------/
-// { force: true }
+// NOTE: add { alter: true } to sync() to update the schema without dropping tables
 db.sequelize.sync().then(function () {
   server.listen(PORT, function () {
     console.log('==> 🌎  Listening on port %s. Visit http://localhost:%s/ in your browser.', PORT, PORT)

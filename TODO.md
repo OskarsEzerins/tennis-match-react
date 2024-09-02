@@ -1,5 +1,3 @@
-- Do not allow to overlap matches (events)
-- Check or fix updates for user activity
 - Add a way to see all other player availability
 - Opt out of notifications
 
@@ -9,6 +7,8 @@
     - (Follow specific users)
   - Notifications for accepted matches
 
+- Refactor apiRoutes.js
+- Refactor server.js
 - Allow to check who brings the balls
 - Add tennis courts info
   - Add a map with preselect places and info about places

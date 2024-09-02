@@ -59,14 +59,7 @@ const Nav = (props) => {
 
       <div>
         <Paper square className={classes.root}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            variant='fullWidth'
-            indicatorColor='primary'
-            textColor='primary'
-            backgroundColor='white'
-          >
+          <Tabs value={value} onChange={handleChange} variant='fullWidth' indicatorColor='primary' textColor='primary'>
             <Tab href='/feed' label={<DynamicLabel icon={Public} label='Feed' />} value='tab-one' />
             <Tab
               href='/availability'

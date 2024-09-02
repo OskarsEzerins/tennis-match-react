@@ -5,14 +5,17 @@
     "endtime",
     "firstname",
     "fullcalendar",
+    "hstore",
     "lastname",
     "loggedin",
+    "mdbreact",
     "oppskilllevel",
     "recipientid",
     "signup",
     "skilllevel",
     "tennismatch",
     "timegrid",
+    "trivago",
     "userid"
   ]
 }
