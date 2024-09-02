@@ -138,11 +138,11 @@ const Scheduler = () => {
           flexDirection='column'
         >
           <Box display='flex' alignItems='center'>
-            <InfoIcon style={{ marginRight: '8px', color: green[500] }} />
+            <InfoIcon style={{ marginRight: '8px' }} />
             <Typography variant='subtitle1'>Click on a time slot to create or find a match.</Typography>
           </Box>
           <MatchStatusIndicator color='red' label='Denied match' />
-          <MatchStatusIndicator color='blue' label='Proposed match / marked availability' />
+          <MatchStatusIndicator color='blue' label='Proposed match / Marked availability' />
           <MatchStatusIndicator color='green' label='Confirmed match' />
         </Box>
         <SchedulerModal

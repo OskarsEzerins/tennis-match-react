@@ -2,6 +2,7 @@ var db = require('../models')
 // const { request } = require("express");
 var crypto = require('crypto')
 const { Sequelize, sequelize } = require('../models')
+const moment = require('moment')
 const Op = Sequelize.Op
 
 module.exports = function (app) {
@@ -193,7 +194,6 @@ module.exports = function (app) {
     }
   })
 
-  // get events for calendar
   app.get('/api/calendar', function (req, res) {
     if (req.session.loggedin) {
       db.Event.findAll({
@@ -273,12 +273,13 @@ module.exports = function (app) {
     }
   })
 
-  // searching for players with availability on chosen day
   app.get('/api/calendar/propose', function (req, res) {
     console.log('DATE!!!!: ' + req.query.date)
     let dateSearch
     if (req.query.date) {
-      dateSearch = { start: { [Op.like]: req.query.date + '%' } }
+      const startOfDay = moment(req.query.date).startOf('day').toDate()
+      const endOfDay = moment(req.query.date).endOf('day').toDate()
+      dateSearch = { start: { [Op.between]: [startOfDay, endOfDay] } }
     }
 
     let locationSearch
@@ -288,25 +289,18 @@ module.exports = function (app) {
 
     let skillUserSearch = {}
     if (req.query.skill) {
-      // skillSearch = {
-      //     skilllevel: req.query.skill
-      // }
       skillUserSearch.skilllevel = req.query.skill
     }
     if (req.query.user) {
-      // userSearch = {
-      //     id: req.query.user
-      // }
       skillUserSearch.id = req.query.user
     }
+
     if (req.session.loggedin) {
       db.Event.findAll({
         where: {
           [Op.and]: [
-            // { start: { [Op.like]: req.query.date + "%" } },
             dateSearch,
             locationSearch,
-
             { UserId: { [Op.not]: req.session.userID } },
             { eventStatus: 'available' }
           ]
@@ -317,7 +311,8 @@ module.exports = function (app) {
             attributes: ['username', 'firstname', 'lastname', 'id', 'skilllevel', 'pushToken', 'pushEnabled'],
             where: skillUserSearch
           }
-        ]
+        ],
+        order: [['start', 'ASC']]
       }).then(function (results) {
         res.json(results)
       })

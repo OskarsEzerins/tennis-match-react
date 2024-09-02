@@ -2,7 +2,7 @@ import React from 'react'
 
 import { TextField, Button, Grid } from '@material-ui/core'
 
-const ProposeMatchForm = (props) => {
+const ProposeMatchForm = ({ newDate, handleInputChange, handleFormSubmit }) => {
   return (
     <Grid item xs={12}>
       <Grid item xs={12} style={{ textAlign: 'center' }}>
@@ -16,8 +16,8 @@ const ProposeMatchForm = (props) => {
               id='newDate'
               name='newDate'
               type='date'
-              value={props.newDate}
-              onChange={props.handleInputChange}
+              value={newDate}
+              onChange={handleInputChange}
               margin='normal'
               variant='outlined'
               InputLabelProps={{ shrink: true }}
@@ -25,7 +25,7 @@ const ProposeMatchForm = (props) => {
             />
           </Grid>
           <Grid item xs={12}>
-            <Button variant='contained' color='primary' onClick={props.handleFormSubmit}>
+            <Button variant='contained' color='primary' onClick={handleFormSubmit}>
               Search
             </Button>
           </Grid>
