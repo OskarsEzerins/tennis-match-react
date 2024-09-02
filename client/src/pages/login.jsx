@@ -9,7 +9,7 @@ const Login = () => {
   const [loginUsername, setLoginUsername] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
 
-  const toast = useToast()
+  const {showToast} = useToast()
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
@@ -38,9 +38,9 @@ const Login = () => {
       .then((res) => res.json())
       .then((res) => {
         if (res.statusString === 'noPassOrUser') {
-          toast('Must enter Username and Password', 'error')
+          showToast('Must enter Username and Password', 'error')
         } else if (res.statusString === 'wrongPassOrUser') {
-          toast('Incorrect Username and/or Password', 'error')
+          showToast('Incorrect Username and/or Password', 'error')
         } else if (res.statusString === 'loggedin') {
           window.location.href = '/'
         }

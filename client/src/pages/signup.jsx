@@ -10,7 +10,7 @@ const Signup = () => {
   const [signupPassword, setSignupPassword] = useState('')
   const [signupEmail, setSignupEmail] = useState('')
 
-  const toast = useToast()
+  const {showToast} = useToast()
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
@@ -44,11 +44,11 @@ const Signup = () => {
       .then((res) => res.json())
       .then((res) => {
         if (res.statusString === 'formNotComplete') {
-          toast('Please complete the registration form', 'warning')
+          showToast('Please complete the registration form', 'warning')
         } else if (res.statusString === 'userAlreadyExists') {
-          toast('Account already exists with that username', 'error')
+          showToast('Account already exists with that username', 'error')
         } else if (res.statusString === 'userCreateSuccess') {
-          toast('Account successfully created', 'success')
+          showToast('Account successfully created', 'success')
           setTimeout(() => {
             window.location.replace('/')
           }, 3000)

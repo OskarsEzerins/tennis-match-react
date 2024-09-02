@@ -36,8 +36,8 @@ const DEFAULT_STATE = {
   courtList: COURT_LIST
 }
 
-function transformMatchData(res, formatTime, skillLevels) {
-  return res.map((item) => {
+const transformMatchData = (res, formatTime, skillLevels) =>
+  res.map((item) => {
     const startHour = parseInt(moment(item.start).format('HH'))
     const endHour = parseInt(moment(item.end).format('HH'))
 
@@ -61,11 +61,10 @@ function transformMatchData(res, formatTime, skillLevels) {
       endIntArr
     }
   })
-}
 
 const ProposeMatch = () => {
   const [state, setState] = useState(DEFAULT_STATE)
-  const toast = useToast()
+  const {showToast} = useToast()
 
   const getDate = useCallback(() => {
     const currentDate = moment(new Date()).format('YYYY-MM-DD')
@@ -162,7 +161,7 @@ const ProposeMatch = () => {
     const searchArr = transformMatchData(res, formatTime, skillLevels)
 
     setState((prevState) => ({ ...prevState, searchResult: searchArr }))
-    toast(
+    showToast(
       searchArr.length === 0 ? 'No availability on this date.' : 'Availability found!',
       searchArr.length === 0 ? 'info' : 'success'
     )
@@ -223,7 +222,7 @@ const ProposeMatch = () => {
       const invalidValues = ['Choose...', 'any', '']
 
       if (invalidStates.some((state) => invalidValues.includes(state))) {
-        toast('Please fill out all fields', 'warning')
+        showToast('Please fill out all fields', 'warning')
       } else {
         fetch('/api/calendar', {
           method: 'POST',
@@ -244,10 +243,10 @@ const ProposeMatch = () => {
             socket.emit('newMatchNotification', currentProposeToUserId)
 
             if (res.statusString === 'eventCreated') {
-              toast('Your request for a match has been sent!', 'success')
+              showToast('Your request for a match has been sent!', 'success')
               window.location.assign('/scheduler')
             } else {
-              toast('Oops! Something went wrong. Please try again.', 'error')
+              showToast('Oops! Something went wrong. Please try again.', 'error')
             }
           })
           .catch((err) => console.log(err))
@@ -294,9 +293,9 @@ const ProposeMatch = () => {
       setState((_prevState) => ({ ...DEFAULT_STATE, subsectionShow: event.currentTarget.value }))
 
       if (event.currentTarget.value === 'player') {
-        toast("Type in a player's name and fill out the form below.", 'info')
+        showToast("Type in a player's name and fill out the form below.", 'info')
       } else if (event.currentTarget.value === 'date') {
-        toast("Pick a date to search for other players' availability.", 'info')
+        showToast("Pick a date to search for other players' availability.", 'info')
         getDate()
       }
     },

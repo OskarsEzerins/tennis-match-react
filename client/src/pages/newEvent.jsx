@@ -17,7 +17,7 @@ const NewEvent = () => {
   const [navValue, _setNavValue] = useState('tab-two')
   const [courtList, _setCourtList] = useState(COURT_LIST)
 
-  const toast = useToast()
+  const { showToast, savePendingToast } = useToast()
 
   const getDate = () => {
     const currentDate = moment(new Date()).format('YYYY-MM-DD')
@@ -34,22 +34,17 @@ const NewEvent = () => {
     getDate()
   }, [])
 
-  const handleInputChange = (event) => {
-    const { name, value } = event.target
-    if (name === 'eventTitle') {
-      setEventTitle(value)
+  const handleInputChange = ({ target: { name, value } }) => {
+    const stateSetters = {
+      eventTitle: setEventTitle,
+      eventLocation: setEventLocation,
+      startTime: setStartTime,
+      endTime: setEndTime,
+      newDate: setNewDate
     }
-    if (name === 'eventLocation') {
-      setEventLocation(value)
-    }
-    if (name === 'startTime') {
-      setStartTime(value)
-    }
-    if (name === 'endTime') {
-      setEndTime(value)
-    }
-    if (name === 'newDate') {
-      setNewDate(value)
+
+    if (stateSetters[name]) {
+      stateSetters[name](value)
     }
   }
 
@@ -61,67 +56,51 @@ const NewEvent = () => {
     setEventLocation('')
   }
 
-  const handleFormSubmit = (event) => {
+  const parseDate = (dateString, timeString) => {
+    const [year, month, day] = dateString.split('-').map(Number)
+    const [hour, minute] = timeString.split(':').map(Number)
+    return new Date(year, month - 1, day, hour, minute)
+  }
+
+  const handleFormSubmit = async (event) => {
     event.preventDefault()
 
-    let currentYear = newDate.substring(0, 4)
-    let currentMonth = newDate.substring(5, 7)
-    let currentMonthAdj = parseInt(currentMonth) - 1
-    let currentDay = newDate.substring(8, 10)
-    let currentStartHour = startTime.substring(0, 2)
-    let currentStartMinute = startTime.substring(3, 5)
-    let currentEndHour = endTime.substring(0, 2)
-    let currentEndMinute = endTime.substring(3, 5)
-    let currentStartDate = new Date(
-      parseInt(currentYear),
-      currentMonthAdj,
-      parseInt(currentDay),
-      parseInt(currentStartHour),
-      parseInt(currentStartMinute)
-    )
-    let currentEndDate = new Date(
-      parseInt(currentYear),
-      currentMonthAdj,
-      parseInt(currentDay),
-      parseInt(currentEndHour),
-      parseInt(currentEndMinute)
-    )
-
-    if (eventTitle === '' || eventLocation === '') {
-      toast('Please fill out all fields', 'warning')
+    if (!eventTitle || !eventLocation) {
+      showToast('Please fill out all fields', 'warning')
       return
     }
 
-    fetch('/api/calendar', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        title: eventTitle,
-        start: currentStartDate,
-        end: currentEndDate,
-        eventStatus: 'available',
-        location: eventLocation
+    const currentStartDate = parseDate(newDate, startTime)
+    const currentEndDate = parseDate(newDate, endTime)
+
+    try {
+      const response = await fetch('/api/calendar', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          title: eventTitle,
+          start: currentStartDate,
+          end: currentEndDate,
+          eventStatus: 'available',
+          location: eventLocation
+        })
       })
-    })
-      .then((res) => res.json())
-      .then((res) => {
-        if (res.statusString === 'eventCreated') {
-          setNewDate('')
-          setStartTime(startTime)
-          setEndTime(endTime)
-          setEventTitle('')
-          setEventLocation('')
-          toast('Your availability has been successfully updated!', 'success')
-        } else {
-          toast('Oops! Something went wrong. Please try again.', 'error')
-        }
-      })
-      .catch((err) => {
-        toast('Oops! Something went wrong. Please try again.')
-        console.log(err)
-      })
+
+      const res = await response.json()
+
+      if (res.statusString === 'eventCreated') {
+        handleReset()
+        savePendingToast('Your availability has been successfully updated!', 'success')
+        window.location.assign('/scheduler')
+      } else {
+        showToast('Oops! Something went wrong. Please try again.', 'error')
+      }
+    } catch (err) {
+      showToast('Oops! Something went wrong. Please try again.', 'error')
+      console.log(err)
+    }
   }
 
   return (

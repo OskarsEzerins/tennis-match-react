@@ -1,4 +1,4 @@
-import React, { useState, useCallback, createContext, useContext } from 'react'
+import React, { useState, useCallback, createContext, useContext, useEffect } from 'react'
 
 import { Snackbar } from '@material-ui/core'
 import MuiAlert from '@material-ui/lab/Alert'
@@ -20,6 +20,18 @@ export const ToastProvider = ({ children }) => {
     setOpen(true)
   }, [])
 
+  const savePendingToast = (msg, severity = 'info') => {
+    const pendingToasts = JSON.parse(sessionStorage.getItem('pendingToasts')) || []
+    pendingToasts.push({ msg, severity })
+    sessionStorage.setItem('pendingToasts', JSON.stringify(pendingToasts))
+  }
+
+  const showPendingToasts = useCallback(() => {
+    const pendingToasts = JSON.parse(sessionStorage.getItem('pendingToasts')) || []
+    pendingToasts.forEach(({ msg, severity }) => showToast(msg, severity))
+    sessionStorage.removeItem('pendingToasts')
+  }, [showToast])
+
   const handleClose = useCallback((_event, reason) => {
     if (reason === 'clickaway') {
       return
@@ -27,8 +39,12 @@ export const ToastProvider = ({ children }) => {
     setOpen(false)
   }, [])
 
+  useEffect(() => {
+    showPendingToasts()
+  }, [showPendingToasts])
+
   return (
-    <ToastContext.Provider value={showToast}>
+    <ToastContext.Provider value={{ showToast, savePendingToast }}>
       {children}
       <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
         <Alert onClose={handleClose} severity={severity}>

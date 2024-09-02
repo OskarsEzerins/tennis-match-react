@@ -1,5 +1,3 @@
-- Add a redirect to smth after availability has been added
-- Add a map with preselect places and info about places
 - Add/modify Calendar to see proposed match dates and apply
 - Show success when proposed a match and accepted a match (redirect back to calendar?)
 - Limit matches suggested at the same time (no double matches)
@@ -17,6 +15,9 @@
 - Add info in scheduler page that You can click on a date
 
 - Add Discord bot:
+
   - Notifications for created availability
     - (Follow specific users)
   - Notifications for accepted matches
+
+- Add a map with preselect places and info about places

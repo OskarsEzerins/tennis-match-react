@@ -10,6 +10,8 @@ import './style.css'
 import { Container, Box } from '@material-ui/core'
 import moment from 'moment'
 
+// TODO: add a legend what does each color mean
+
 const Scheduler = () => {
   const [savedDates, setSavedDates] = useState([])
   const [selectedEvent, setSelectedEvent] = useState({})
