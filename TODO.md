@@ -1,17 +1,7 @@
-- Add/modify Calendar to see proposed match dates and apply
-- Limit matches suggested at the same time (no double matches)
-- Add toasts
-- Add text to some buttons (menu)
-- Allow to check who brings the balls
-- Add a mehanism to mark when a court is reserved
-- Add tennis courts info
+- Do not allow to overlap matches (events)
 - Check or fix updates for user activity
-- Create calendar events
-- Add a way to see all matches
+- Add a way to see all other player availability
 - Opt out of notifications
-- Send notification when a response to a match is made
-- Allow to select multiple courts
-- Add info in scheduler page that You can click on a date
 
 - Add Discord bot:
 
@@ -19,4 +9,9 @@
     - (Follow specific users)
   - Notifications for accepted matches
 
-- Add a map with preselect places and info about places
+- Allow to check who brings the balls
+- Add tennis courts info
+  - Add a map with preselect places and info about places
+- Add better toasts
+- Add a mehanism to mark when a court is reserved
+- Allow to select multiple courts

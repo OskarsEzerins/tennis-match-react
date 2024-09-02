@@ -3,11 +3,11 @@ import React, { useState } from 'react'
 import Drawer from '../Drawer'
 import './style.css'
 
-import { Grid, Box } from '@material-ui/core'
+import { Grid, Box, useMediaQuery } from '@material-ui/core'
 import Paper from '@material-ui/core/Paper'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import { makeStyles } from '@material-ui/core/styles'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EventIcon from '@material-ui/icons/Event'
 import Public from '@material-ui/icons/Public'
@@ -18,6 +18,20 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper
   }
 }))
+
+const DynamicLabel = ({ icon: Icon, label }) => {
+  const theme = useTheme()
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'))
+
+  return !isMobile ? (
+    <span style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <Icon />
+      <span>{label}</span>
+    </span>
+  ) : (
+    <Icon />
+  )
+}
 
 const Nav = (props) => {
   const classes = useStyles()
@@ -51,17 +65,15 @@ const Nav = (props) => {
             variant='fullWidth'
             indicatorColor='primary'
             textColor='primary'
-            aria-label='icon tabs example'
             backgroundColor='white'
           >
-            <Tab href='/feed' icon={<Public />} aria-label='public' value='tab-one' />
+            <Tab href='/feed' label={<DynamicLabel icon={Public} label='Feed' />} value='tab-one' />
             <Tab
               href='/availability'
-              icon={<AddCircleOutlineIcon />}
-              aria-label='add-circle-outline-icon'
+              label={<DynamicLabel icon={AddCircleOutlineIcon} label='Availability' />}
               value='tab-two'
             />
-            <Tab href='/scheduler' icon={<EventIcon />} aria-label='event-icon' value='tab-three' />
+            <Tab href='/scheduler' label={<DynamicLabel icon={EventIcon} label='Scheduler' />} value='tab-three' />
           </Tabs>
         </Paper>
       </div>
