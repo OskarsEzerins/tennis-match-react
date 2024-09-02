@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { useToast } from '../../hooks'
+
 import { TextField, Button, Grid, MenuItem, Box } from '@material-ui/core'
 
 export const NewEventForm = ({
@@ -13,6 +15,8 @@ export const NewEventForm = ({
   endTime,
   startTime
 }) => {
+  const toast = useToast()
+
   return (
     <Grid item xs={12}>
       <Grid item xs={12} style={{ textAlign: 'center' }}>
@@ -114,10 +118,22 @@ export const NewEventForm = ({
           </Grid>
           <Grid item xs={12}>
             <Box display='flex' justifyContent='space-between' alignItems='center'>
-              <Button variant='contained' color='primary' onClick={handleFormSubmit}>
-                Submit
-              </Button>
-              <Button variant='contained' color='default' onClick={handleReset}>
+              <Box display='flex' justifyContent='space-between' style={{ gap: '10px' }}>
+                <Button variant='contained' color='primary' onClick={handleFormSubmit} mr={2}>
+                  Submit
+                </Button>
+                <Button variant='contained' color='default' onClick={() => window.location.assign('/scheduler')}>
+                  Go to scheduler
+                </Button>
+              </Box>
+              <Button
+                variant='contained'
+                color='secondary'
+                onClick={() => {
+                  handleReset()
+                  toast('Form reset', 'warning')
+                }}
+              >
                 Reset
               </Button>
             </Box>

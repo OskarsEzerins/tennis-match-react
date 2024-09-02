@@ -19,46 +19,61 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-function RequestCard(props) {
+const RequestCard = ({
+  title,
+  proposeUserFirstname,
+  proposeUsername,
+  proposeUserLastname,
+  proposeUserSkill,
+  eventLocation,
+  date,
+  starttime,
+  endtime,
+  eventId,
+  fullStarttime,
+  fullEndtime,
+  handleConfirm,
+  handleDeny
+}) => {
   const classes = useStyles()
 
   return (
     <Card className={classes.root} variant='outlined'>
       <CardContent>
         <Typography variant='h5' gutterBottom>
-          {props.title}
+          {title}
         </Typography>
         <Typography>
-          {props.proposeUserFirstname
-            ? `Request by: ${props.proposeUsername} (${props.proposeUserFirstname} ${props.proposeUserLastname})`
-            : `Request by: ${props.proposeUsername}`}
+          {proposeUserFirstname
+            ? `Request by: ${proposeUsername} (${proposeUserFirstname} ${proposeUserLastname})`
+            : `Request by: ${proposeUsername}`}
         </Typography>
         <Typography color='textSecondary' gutterBottom>
-          Skill level: {props.proposeUserSkill ? `${props.proposeUserSkill}` : 'n/a'}
+          Skill level: {proposeUserSkill ? `${proposeUserSkill}` : 'n/a'}
         </Typography>
         <Typography variant='body2' component='p'>
-          Court Location: {props.eventLocation}
+          Court Location: {eventLocation}
           <br />
-          Date: {props.date}
+          Date: {date}
           <br />
-          Start Time: {props.starttime}
+          Start Time: {starttime}
           <br />
-          End Time: {props.endtime}
+          End Time: {endtime}
         </Typography>
       </CardContent>
       <CardActions>
         <Button
           size='small'
           color='primary'
-          data-eventid={props.eventId}
-          data-eventtitle={props.title}
-          data-start={props.fullStarttime}
-          data-end={props.fullEndtime}
-          onClick={props.handleConfirm}
+          data-event-id={eventId}
+          data-event-title={title}
+          data-start={fullStarttime}
+          data-end={fullEndtime}
+          onClick={handleConfirm}
         >
           Confirm
         </Button>
-        <Button size='small' color='secondary' data-eventid={props.eventId} onClick={props.handleDeny}>
+        <Button size='small' color='secondary' data-event-id={eventId} onClick={handleDeny}>
           Deny
         </Button>
       </CardActions>

@@ -17,7 +17,7 @@ const NewEvent = () => {
   const [navValue, _setNavValue] = useState('tab-two')
   const [courtList, _setCourtList] = useState(COURT_LIST)
 
-  const { showToast, savePendingToast } = useToast()
+  const { showToast } = useToast()
 
   const getDate = () => {
     const currentDate = moment(new Date()).format('YYYY-MM-DD')
@@ -48,10 +48,14 @@ const NewEvent = () => {
     }
   }
 
-  const handleReset = () => {
+  const handleSoftReset = () => {
     setNewDate('')
     setStartTime('17:00')
     setEndTime('18:00')
+  }
+
+  const handleReset = () => {
+    handleSoftReset()
     setEventTitle('')
     setEventLocation('')
   }
@@ -91,9 +95,8 @@ const NewEvent = () => {
       const res = await response.json()
 
       if (res.statusString === 'eventCreated') {
-        handleReset()
-        savePendingToast('Your availability has been successfully updated!', 'success')
-        window.location.assign('/scheduler')
+        handleSoftReset()
+        showToast('Your availability has been successfully updated!', 'success')
       } else {
         showToast('Oops! Something went wrong. Please try again.', 'error')
       }

@@ -1,5 +1,4 @@
 - Add/modify Calendar to see proposed match dates and apply
-- Show success when proposed a match and accepted a match (redirect back to calendar?)
 - Limit matches suggested at the same time (no double matches)
 - Add toasts
 - Add text to some buttons (menu)

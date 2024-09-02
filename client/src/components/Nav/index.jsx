@@ -1,5 +1,4 @@
-//Nav/index.js
-import React from 'react'
+import React, { useState } from 'react'
 
 import Drawer from '../Drawer'
 import './style.css'
@@ -20,9 +19,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-export default function Nav(props) {
+const Nav = (props) => {
   const classes = useStyles()
-  const [value, setValue] = React.useState(props.value)
+  const [value, setValue] = useState(props.value)
 
   const handleChange = (event, _newValue) => {
     setValue(event.target.value)
@@ -69,3 +68,5 @@ export default function Nav(props) {
     </div>
   )
 }
+
+export default Nav

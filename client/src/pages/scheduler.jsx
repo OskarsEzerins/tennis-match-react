@@ -7,10 +7,17 @@ import CalendarEvent from '../utils/CalendarEvent'
 import { DEFAULT_CLOCK_FORMAT, DEFAULT_DATE_FORMAT } from '../utils/dates'
 import './style.css'
 
-import { Container, Box } from '@material-ui/core'
+import { Container, Box, Typography } from '@material-ui/core'
+import { teal, green } from '@material-ui/core/colors'
+import InfoIcon from '@material-ui/icons/Info'
 import moment from 'moment'
 
-// TODO: add a legend what does each color mean
+const MatchStatusIndicator = ({ color, label }) => (
+  <Box display='flex' alignItems='center'>
+    <Box width='10px' height='10px' bgcolor={color} marginRight='8px' borderRadius='10px' />
+    <Typography variant='subtitle1'>{`- ${label}`}</Typography>
+  </Box>
+)
 
 const Scheduler = () => {
   const [savedDates, setSavedDates] = useState([])
@@ -116,9 +123,27 @@ const Scheduler = () => {
   return (
     <div>
       <Nav value={navValue} />
-      <Container maxWidth='md'>
-        <Box paddingTop='20px'>
+      <Container>
+        <Box marginTop='20px'>
           <Calendar handleDateClick={handleDateClick} events={calendarEvents} handleEventClick={handleEventClick} />
+        </Box>
+        <Box
+          margin='20px'
+          padding='20px'
+          bgcolor={teal[50]}
+          border={`1px solid ${green[500]}`}
+          borderRadius='8px'
+          display='flex'
+          alignItems='left'
+          flexDirection='column'
+        >
+          <Box display='flex' alignItems='center'>
+            <InfoIcon style={{ marginRight: '8px', color: green[500] }} />
+            <Typography variant='subtitle1'>Click on a time slot to create or find a match.</Typography>
+          </Box>
+          <MatchStatusIndicator color='red' label='Denied match' />
+          <MatchStatusIndicator color='blue' label='Proposed match / marked availability' />
+          <MatchStatusIndicator color='green' label='Confirmed match' />
         </Box>
         <SchedulerModal
           show={dateModalShow}

@@ -16,129 +16,128 @@ import {
   useTheme
 } from '@material-ui/core'
 
-const ProposeMuiModal = (props) => {
+const CustomTextField = ({ label, id, name, value, onChange, options }) => (
+  <TextField
+    select
+    label={label}
+    id={id}
+    name={name}
+    value={value}
+    onChange={onChange}
+    margin='normal'
+    variant='outlined'
+    fullWidth
+  >
+    {options.map((option) => (
+      <MenuItem key={option.value} value={option.value}>
+        {option.value}
+      </MenuItem>
+    ))}
+  </TextField>
+)
+
+const ProposeMuiModal = ({
+  show,
+  onHide,
+  title,
+  username,
+  userFirstname,
+  userLastname,
+  eventLocationTwo,
+  eventLocation,
+  defaultEventLocation,
+  handleInputChange,
+  startTimeHour,
+  startIntArr,
+  startTimeMinute,
+  endTimeHour,
+  endIntArr,
+  endTimeMinute,
+  handleProposeSubmit,
+  userid
+}) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
   return (
-    <Dialog open={props.show} onClose={props.onHide} fullScreen={fullScreen}>
-      <DialogTitle>{props.title}</DialogTitle>
+    <Dialog open={show} onClose={onHide} fullScreen={fullScreen}>
+      <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {props.userFirstname
-            ? `Username: ${props.username} (${props.userFirstname} ${props.userLastname})`
-            : `Username: ${props.username}`}
+          {userFirstname ? `Username: ${username} (${userFirstname} ${userLastname})` : `Username: ${username}`}
           <br />
-          {props.eventLocationTwo !== 'any' && `Location: ${props.eventLocationTwo}`}
+          {eventLocationTwo !== 'any' && `Location: ${eventLocationTwo}`}
         </DialogContentText>
         <Grid container spacing={1}>
-          {props.eventLocationTwo === 'any' && (
+          {eventLocationTwo === 'any' && (
             <Grid item xs={12}>
-              <TextField
-                select
+              <CustomTextField
                 label='Court Location'
                 id='eventLocation'
                 name='eventLocation'
-                value={props.eventLocation === 'any' ? props.defaultEventLocation : props.eventLocation}
-                onChange={props.handleInputChange}
-                margin='normal'
-                variant='outlined'
-                placeholder={props.defaultEventLocation}
-                fullWidth
-              >
-                {COURT_LIST.map((court) => (
-                  <MenuItem key={court} value={court}>
-                    {court}
-                  </MenuItem>
-                ))}
-              </TextField>
+                value={eventLocation === 'any' ? defaultEventLocation : eventLocation}
+                onChange={handleInputChange}
+                options={COURT_LIST.map((court) => ({ value: court, display: court }))}
+              />
             </Grid>
           )}
           <Grid item xs={12} sm={6}>
-            <TextField
-              select
+            <CustomTextField
               label='Start Hour'
               id='startTimeHour'
               name='startTimeHour'
-              value={props.startTimeHour}
-              onChange={props.handleInputChange}
-              margin='normal'
-              variant='outlined'
-              placeholder={props.startTimeHour}
-              fullWidth
-            >
-              {props.startIntArr.map((hour) => (
-                <MenuItem key={hour.value} value={hour.value}>
-                  {hour.display}
-                </MenuItem>
-              ))}
-            </TextField>
+              value={startTimeHour}
+              onChange={handleInputChange}
+              options={startIntArr.map((hour) => ({ value: hour.value, display: hour.display }))}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              select
+            <CustomTextField
               label='Start Minute'
               id='startTimeMinute'
               name='startTimeMinute'
-              value={props.startTimeMinute}
-              onChange={props.handleInputChange}
-              margin='normal'
-              variant='outlined'
-              placeholder={props.startTimeMinute}
-              fullWidth
-            >
-              <MenuItem value='00'>:00</MenuItem>
-              <MenuItem value='15'>:15</MenuItem>
-              <MenuItem value='30'>:30</MenuItem>
-              <MenuItem value='45'>:45</MenuItem>
-            </TextField>
+              value={startTimeMinute}
+              onChange={handleInputChange}
+              options={[
+                { value: '00', display: ':00' },
+                { value: '15', display: ':15' },
+                { value: '30', display: ':30' },
+                { value: '45', display: ':45' }
+              ]}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              select
+            <CustomTextField
               label='End Hour'
               id='endTimeHour'
               name='endTimeHour'
-              value={props.endTimeHour}
-              onChange={props.handleInputChange}
-              margin='normal'
-              variant='outlined'
-              placeholder={props.endTimeHour}
-              fullWidth
-            >
-              {props.endIntArr.map((hour) => (
-                <MenuItem key={hour.value} value={hour.value}>
-                  {hour.display}
-                </MenuItem>
-              ))}
-            </TextField>
+              value={endTimeHour}
+              onChange={handleInputChange}
+              options={endIntArr.map((hour) => ({ value: hour.value, display: hour.display }))}
+            />
           </Grid>
           <Grid item xs={12} sm={6}>
-            <TextField
-              select
+            <CustomTextField
               label='End Minute'
               id='endTimeMinute'
               name='endTimeMinute'
-              value={props.endTimeMinute}
-              onChange={props.handleInputChange}
-              margin='normal'
-              variant='outlined'
-              placeholder={props.endTimeMinute}
-              fullWidth
-            >
-              <MenuItem value='00'>:00</MenuItem>
-              <MenuItem value='15'>:15</MenuItem>
-              <MenuItem value='30'>:30</MenuItem>
-              <MenuItem value='45'>:45</MenuItem>
-            </TextField>
+              value={endTimeMinute}
+              onChange={handleInputChange}
+              options={[
+                { value: '00', display: ':00' },
+                { value: '15', display: ':15' },
+                { value: '30', display: ':30' },
+                { value: '45', display: ':45' }
+              ]}
+            />
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button data-userid={props.userid} onClick={props.handleProposeSubmit} color='primary'>
+        <Button data-userid={userid} onClick={handleProposeSubmit} color='primary'>
           Propose Match
         </Button>
-        <Button onClick={props.onHide} color='secondary'>
+        <Button onClick={onHide} color='secondary'>
           Close
         </Button>
       </DialogActions>

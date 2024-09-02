@@ -36,20 +36,21 @@ const DEFAULT_STATE = {
   courtList: COURT_LIST
 }
 
+const createIntArr = (start, end, formatTime, isReversed = false) => {
+  const length = end - start + 1
+  return Array.from({ length }, (_, j) => {
+    const value = isReversed ? end - j : start + j
+    return { value, display: formatTime(value) }
+  })
+}
+
 const transformMatchData = (res, formatTime, skillLevels) =>
   res.map((item) => {
     const startHour = parseInt(moment(item.start).format('HH'))
     const endHour = parseInt(moment(item.end).format('HH'))
 
-    const startIntArr = Array.from({ length: endHour - startHour + 1 }, (_, j) => ({
-      value: startHour + j,
-      display: formatTime(startHour + j)
-    }))
-
-    const endIntArr = Array.from({ length: endHour - startHour + 1 }, (_, j) => ({
-      value: endHour - j,
-      display: formatTime(endHour - j)
-    }))
+    const startIntArr = createIntArr(startHour, endHour, formatTime)
+    const endIntArr = createIntArr(startHour, endHour, formatTime, true)
 
     return {
       ...item,
@@ -64,7 +65,7 @@ const transformMatchData = (res, formatTime, skillLevels) =>
 
 const ProposeMatch = () => {
   const [state, setState] = useState(DEFAULT_STATE)
-  const {showToast} = useToast()
+  const { showToast, savePendingToast } = useToast()
 
   const getDate = useCallback(() => {
     const currentDate = moment(new Date()).format('YYYY-MM-DD')
@@ -243,7 +244,7 @@ const ProposeMatch = () => {
             socket.emit('newMatchNotification', currentProposeToUserId)
 
             if (res.statusString === 'eventCreated') {
-              showToast('Your request for a match has been sent!', 'success')
+              savePendingToast('Your request for a match has been sent!', 'success')
               window.location.assign('/scheduler')
             } else {
               showToast('Oops! Something went wrong. Please try again.', 'error')
@@ -295,7 +296,7 @@ const ProposeMatch = () => {
       if (event.currentTarget.value === 'player') {
         showToast("Type in a player's name and fill out the form below.", 'info')
       } else if (event.currentTarget.value === 'date') {
-        showToast("Pick a date to search for other players' availability.", 'info')
+        showToast("Pick a date to search for other player's availability.", 'info')
         getDate()
       }
     },
