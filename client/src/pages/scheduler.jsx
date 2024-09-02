@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react'
 import Calendar from '../components/Calendar'
 import { SchedulerModal, EventDetailsModal } from '../components/Modal'
 import Nav from '../components/Nav'
+import { useToast } from '../hooks'
 import CalendarEvent from '../utils/CalendarEvent'
 import { DEFAULT_CLOCK_FORMAT, DEFAULT_DATE_FORMAT } from '../utils/dates'
 import './style.css'
@@ -29,6 +30,8 @@ const Scheduler = () => {
   const [thisDate, setThisDate] = useState('')
   const [navValue, _setNavValue] = useState('tab-three')
   const [calendarEvents, setCalendarEvents] = useState([])
+
+  const { showToast } = useToast()
 
   const getDates = () => {
     fetch('/api/calendar')
@@ -113,6 +116,7 @@ const Scheduler = () => {
     })
       .then((_res) => {
         getDates()
+        showToast('Event deleted!', 'success')
       })
       .catch((err) => {
         console.log(err)
