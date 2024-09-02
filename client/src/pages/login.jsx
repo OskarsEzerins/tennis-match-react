@@ -1,20 +1,15 @@
 import React, { useState } from 'react'
 
 import LoginForm from '../components/LoginForm'
+import { useToast } from '../hooks'
 
-import { Grid, Snackbar, Container } from '@material-ui/core'
-import MuiAlert from '@material-ui/lab/Alert'
-
-function Alert(props) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />
-}
+import { Grid, Container } from '@material-ui/core'
 
 const Login = () => {
   const [loginUsername, setLoginUsername] = useState('')
   const [loginPassword, setLoginPassword] = useState('')
-  const [loginInstructions, setLoginInstructions] = useState('Please enter your details')
-  const [openSnackbar, setOpenSnackbar] = useState(false)
-  const [severity, setSeverity] = useState('')
+
+  const toast = useToast()
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
@@ -23,13 +18,6 @@ const Login = () => {
     } else if (name === 'loginPassword') {
       setLoginPassword(value)
     }
-  }
-
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
-    }
-    setOpenSnackbar(false)
   }
 
   const handleFormSubmit = (event) => {
@@ -50,13 +38,9 @@ const Login = () => {
       .then((res) => res.json())
       .then((res) => {
         if (res.statusString === 'noPassOrUser') {
-          setLoginInstructions('Must enter Username and Password')
-          setOpenSnackbar(true)
-          setSeverity('error')
+          toast('Must enter Username and Password', 'error')
         } else if (res.statusString === 'wrongPassOrUser') {
-          setLoginInstructions('Incorrect Username and/or Password')
-          setOpenSnackbar(true)
-          setSeverity('error')
+          toast('Incorrect Username and/or Password', 'error')
         } else if (res.statusString === 'loggedin') {
           window.location.href = '/'
         }
@@ -75,18 +59,12 @@ const Login = () => {
             <LoginForm
               usernameValue={loginUsername}
               passwordValue={loginPassword}
-              loginInstructions={loginInstructions}
               handleInputChange={handleInputChange}
               handleFormSubmit={handleFormSubmit}
             />
           </Grid>
         </Grid>
       </Container>
-      <Snackbar open={openSnackbar} autoHideDuration={6000} onClose={handleSnackbarClose}>
-        <Alert onClose={handleSnackbarClose} severity={severity}>
-          {loginInstructions}
-        </Alert>
-      </Snackbar>
     </div>
   )
 }

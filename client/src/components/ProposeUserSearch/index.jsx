@@ -1,14 +1,15 @@
 import React from 'react'
 
+import { COURT_LIST } from '../../utils/constants'
+
 import { TextField, MenuItem, Button, Grid } from '@material-ui/core'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 
-function ProposeUserSearch(props) {
+const ProposeUserSearch = (props) => {
   return (
     <Grid item xs={12}>
       <Grid item xs={12} style={{ textAlign: 'center' }}>
         <h3>Propose Match to a Player</h3>
-        <p>{props.instructions}</p>
       </Grid>
       <form>
         <Grid container spacing={3}>
@@ -68,7 +69,7 @@ function ProposeUserSearch(props) {
               placeholder='Court Location'
               fullWidth
             >
-              {props.courtList.map((option) => (
+              {COURT_LIST.map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>

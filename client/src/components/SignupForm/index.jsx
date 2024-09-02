@@ -17,7 +17,7 @@ const useStyles = makeStyles((_theme) => ({
     border: 0,
     color: 'white',
     height: 48,
-    padding: '0 30px',
+    padding: '0 18px',
     boxShadow: '0 3px 5px 2px rgb(125, 195, 245, .4)'
   },
   buttonTwo: {
@@ -34,22 +34,21 @@ const useStyles = makeStyles((_theme) => ({
   }
 }))
 
-const LoginForm = ({ handleFormSubmit, handleInputChange, usernameValue, passwordValue }) => {
+const SignupForm = ({ handleInputChange, handleFormSubmit, usernameValue, emailValue, passwordValue }) => {
   const classes = useStyles()
 
   return (
-    <>
-      <Form onSubmit={handleFormSubmit}>
-        <div className='subtitle-and-instructions'>
-          <h2 className='login-page-subtitle'>Login</h2>
-        </div>
+    <div>
+      <div className='subtitle-and-instructions'>
+        <h2 className='login-page-subtitle'>Create Account</h2>
+      </div>
 
+      <Form onSubmit={handleFormSubmit}>
         <Box display='flex' justifyContent='center' alignItems='center'>
           <TextField
-            id='loginUsername'
-            name='loginUsername'
+            id='signupUsername'
+            name='signupUsername'
             label='Username'
-            autoComplete='username'
             InputProps={{ classes: classes }}
             onChange={handleInputChange}
             value={usernameValue}
@@ -58,18 +57,28 @@ const LoginForm = ({ handleFormSubmit, handleInputChange, usernameValue, passwor
 
         <Box display='flex' justifyContent='center' alignItems='center'>
           <TextField
+            id='signupEmail'
+            name='signupEmail'
+            label='Email'
+            InputProps={{ classes: classes }}
+            onChange={handleInputChange}
+            value={emailValue}
+          />
+        </Box>
+
+        <Box display='flex' justifyContent='center' alignItems='center'>
+          <TextField
             type='password'
-            id='loginPassword'
-            name='loginPassword'
+            id='signupPassword'
+            name='signupPassword'
             label='Password'
-            autoComplete='current-password'
             InputProps={{ classes: classes }}
             onChange={handleInputChange}
             value={passwordValue}
           />
         </Box>
 
-        <Box display='flex' justifyContent='center' alignItems='center' paddingTop='20px'>
+        <Box display='flex' justifyContent='center' alignItems='center' paddingTop='15px'>
           <Button
             type='submit'
             variant='contained'
@@ -77,21 +86,21 @@ const LoginForm = ({ handleFormSubmit, handleInputChange, usernameValue, passwor
             id='login-button'
             classes={{ root: classes.button }}
           >
-            Sign In
+            Create Account
           </Button>
         </Box>
       </Form>
 
       <Box marginTop='60px'>
         <div className='subtitle-and-instructions'>
-          <p>First time here?</p>
-          <Button variant='contained' href='/signup' classes={{ root: classes.buttonTwo }}>
-            SIGN UP
+          <p>Already a member?</p>
+          <Button variant='contained' href='/' classes={{ root: classes.buttonTwo }}>
+            LOG IN
           </Button>
         </div>
       </Box>
-    </>
+    </div>
   )
 }
 
-export default LoginForm
+export default SignupForm

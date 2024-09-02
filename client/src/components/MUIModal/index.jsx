@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { COURT_LIST } from '../../utils/constants'
+
 import {
   Button,
   TextField,
@@ -14,7 +16,7 @@ import {
   useTheme
 } from '@material-ui/core'
 
-function ProposeMuiModal(props) {
+const ProposeMuiModal = (props) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
 
@@ -44,7 +46,7 @@ function ProposeMuiModal(props) {
                 placeholder={props.defaultEventLocation}
                 fullWidth
               >
-                {props.courtList.map((court) => (
+                {COURT_LIST.map((court) => (
                   <MenuItem key={court} value={court}>
                     {court}
                   </MenuItem>

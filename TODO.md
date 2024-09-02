@@ -1,4 +1,3 @@
-- Change clock format
 - Add a redirect to smth after availability has been added
 - Add a map with preselect places and info about places
 - Add/modify Calendar to see proposed match dates and apply

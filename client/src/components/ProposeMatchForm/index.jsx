@@ -2,7 +2,7 @@ import React from 'react'
 
 import { TextField, Button, Grid } from '@material-ui/core'
 
-function ProposeMatchForm(props) {
+const ProposeMatchForm = (props) => {
   return (
     <Grid item xs={12}>
       <Grid item xs={12} style={{ textAlign: 'center' }}>
@@ -31,9 +31,6 @@ function ProposeMatchForm(props) {
           </Grid>
         </Grid>
       </form>
-      <Grid item xs={12} style={{ textAlign: 'center' }}>
-        <p>{props.instructions}</p>
-      </Grid>
     </Grid>
   )
 }

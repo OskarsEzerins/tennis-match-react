@@ -1,19 +1,24 @@
 import React from 'react'
 
-import { TextField, Button, Grid, MenuItem, Snackbar } from '@material-ui/core'
-import MuiAlert from '@material-ui/lab/Alert'
+import { TextField, Button, Grid, MenuItem, Box } from '@material-ui/core'
 
-function Alert(props) {
-  return <MuiAlert elevation={6} variant='filled' {...props} />
-}
-
-export function NewEventForm(props) {
+export const NewEventForm = ({
+  courtList,
+  eventLocation,
+  eventTitle,
+  handleInputChange,
+  handleFormSubmit,
+  handleReset,
+  newDate,
+  endTime,
+  startTime
+}) => {
   return (
     <Grid item xs={12}>
       <Grid item xs={12} style={{ textAlign: 'center' }}>
         <h2>Availability</h2>
         <div>
-          <p>{props.instructions}</p>
+          <p>{}</p>
         </div>
       </Grid>
       <form>
@@ -24,8 +29,8 @@ export function NewEventForm(props) {
               label='Play Type'
               id='eventTitle'
               name='eventTitle'
-              value={props.eventTitle}
-              onChange={props.handleInputChange}
+              value={eventTitle}
+              onChange={handleInputChange}
               margin='normal'
               variant='outlined'
               placeholder='Play Type'
@@ -41,14 +46,14 @@ export function NewEventForm(props) {
               label='Court Location'
               id='eventLocation'
               name='eventLocation'
-              value={props.eventLocation}
-              onChange={props.handleInputChange}
+              value={eventLocation}
+              onChange={handleInputChange}
               margin='normal'
               variant='outlined'
               placeholder='Court Location'
               fullWidth
             >
-              {props.courtList.map((event, i) => (
+              {courtList.map((event, i) => (
                 <MenuItem key={i} value={event}>
                   {event}
                 </MenuItem>
@@ -61,8 +66,8 @@ export function NewEventForm(props) {
               id='newDate'
               name='newDate'
               type='date'
-              value={props.newDate}
-              onChange={props.handleInputChange}
+              value={newDate}
+              onChange={handleInputChange}
               margin='normal'
               variant='outlined'
               InputLabelProps={{ shrink: true }}
@@ -75,8 +80,8 @@ export function NewEventForm(props) {
               name='startTime'
               label='Start Time'
               type='time'
-              value={props.startTime}
-              onChange={props.handleInputChange}
+              value={startTime}
+              onChange={handleInputChange}
               margin='normal'
               variant='outlined'
               InputLabelProps={{
@@ -94,8 +99,8 @@ export function NewEventForm(props) {
               name='endTime'
               label='End Time'
               type='time'
-              value={props.endTime}
-              onChange={props.handleInputChange}
+              value={endTime}
+              onChange={handleInputChange}
               margin='normal'
               variant='outlined'
               InputLabelProps={{
@@ -108,22 +113,17 @@ export function NewEventForm(props) {
             />
           </Grid>
           <Grid item xs={12}>
-            <Button variant='contained' color='primary' onClick={props.handleFormSubmit}>
-              Submit
-            </Button>
+            <Box display='flex' justifyContent='space-between' alignItems='center'>
+              <Button variant='contained' color='primary' onClick={handleFormSubmit}>
+                Submit
+              </Button>
+              <Button variant='contained' color='default' onClick={handleReset}>
+                Reset
+              </Button>
+            </Box>
           </Grid>
         </Grid>
       </form>
     </Grid>
-  )
-}
-
-export function NewEventSnackbar(props) {
-  return (
-    <Snackbar open={props.openSnackbar} autoHideDuration={6000} onClose={props.handleSnackbarClose}>
-      <Alert onClose={props.handleSnackbarClose} severity={props.severity}>
-        {props.instructions}
-      </Alert>
-    </Snackbar>
   )
 }

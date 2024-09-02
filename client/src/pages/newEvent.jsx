@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
 
 import Nav from '../components/Nav'
-import { NewEventForm, NewEventSnackbar } from '../components/NewEventForm'
+import { NewEventForm } from '../components/NewEventForm'
+import { useToast } from '../hooks'
 import { COURT_LIST } from '../utils/constants'
 
 import { Grid, Container } from '@material-ui/core'
@@ -14,10 +15,9 @@ const NewEvent = () => {
   const [eventTitle, setEventTitle] = useState('')
   const [eventLocation, setEventLocation] = useState('')
   const [navValue, _setNavValue] = useState('tab-two')
-  const [instructions, setInstructions] = useState('Please enter the following information to set your availability')
   const [courtList, _setCourtList] = useState(COURT_LIST)
-  const [openSnackbar, setOpenSnackbar] = useState(false)
-  const [severity, setSeverity] = useState('')
+
+  const toast = useToast()
 
   const getDate = () => {
     const currentDate = moment(new Date()).format('YYYY-MM-DD')
@@ -53,15 +53,17 @@ const NewEvent = () => {
     }
   }
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return
-    }
-    setOpenSnackbar(false)
+  const handleReset = () => {
+    setNewDate('')
+    setStartTime('17:00')
+    setEndTime('18:00')
+    setEventTitle('')
+    setEventLocation('')
   }
 
   const handleFormSubmit = (event) => {
     event.preventDefault()
+
     let currentYear = newDate.substring(0, 4)
     let currentMonth = newDate.substring(5, 7)
     let currentMonthAdj = parseInt(currentMonth) - 1
@@ -86,52 +88,40 @@ const NewEvent = () => {
     )
 
     if (eventTitle === '' || eventLocation === '') {
-      setNewDate('')
-      setStartTime('17:00')
-      setEndTime('18:00')
-      setEventTitle('')
-      setEventLocation('')
-      setInstructions('Oops! Something went wrong. Please try again.')
-      setOpenSnackbar(true)
-      setSeverity('error')
-    } else {
-      fetch('/api/calendar', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          title: eventTitle,
-          start: currentStartDate,
-          end: currentEndDate,
-          eventStatus: 'available',
-          location: eventLocation
-        })
-      })
-        .then((res) => res.json())
-        .then((res) => {
-          if (res.statusString === 'eventCreated') {
-            setNewDate('')
-            setStartTime(startTime)
-            setEndTime(endTime)
-            setEventTitle('')
-            setEventLocation('')
-            setInstructions('Your availability has been successfully updated!')
-            setOpenSnackbar(true)
-            setSeverity('success')
-          } else {
-            setNewDate('')
-            setStartTime('17:00')
-            setEndTime('18:00')
-            setEventTitle('')
-            setEventLocation('')
-            setInstructions('Oops! Something went wrong. Please try again.')
-            setOpenSnackbar(true)
-            setSeverity('error')
-          }
-        })
-        .catch((err) => console.log(err))
+      toast('Please fill out all fields', 'warning')
+      return
     }
+
+    fetch('/api/calendar', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        title: eventTitle,
+        start: currentStartDate,
+        end: currentEndDate,
+        eventStatus: 'available',
+        location: eventLocation
+      })
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.statusString === 'eventCreated') {
+          setNewDate('')
+          setStartTime(startTime)
+          setEndTime(endTime)
+          setEventTitle('')
+          setEventLocation('')
+          toast('Your availability has been successfully updated!', 'success')
+        } else {
+          toast('Oops! Something went wrong. Please try again.', 'error')
+        }
+      })
+      .catch((err) => {
+        toast('Oops! Something went wrong. Please try again.')
+        console.log(err)
+      })
   }
 
   return (
@@ -147,20 +137,11 @@ const NewEvent = () => {
             startTime={startTime}
             endTime={endTime}
             handleFormSubmit={handleFormSubmit}
+            handleReset={handleReset}
             courtList={courtList}
-            instructions={instructions}
-            openSnackbar={openSnackbar}
-            handleSnackbarClose={handleSnackbarClose}
-            severity={severity}
           />
         </Grid>
       </Container>
-      <NewEventSnackbar
-        instructions={instructions}
-        openSnackbar={openSnackbar}
-        handleSnackbarClose={handleSnackbarClose}
-        severity={severity}
-      />
     </div>
   )
 }
