@@ -2,15 +2,16 @@ import React, { useState } from 'react'
 
 import SignupForm from '../components/SignupForm'
 import { useToast } from '../hooks'
+import { APP_NAME } from '../utils/constants'
 
-import { Grid, Container } from '@material-ui/core'
+import { Grid, Box, Button, Typography } from '@material-ui/core'
 
 const Signup = () => {
   const [signupUsername, setSignupUsername] = useState('')
   const [signupPassword, setSignupPassword] = useState('')
   const [signupEmail, setSignupEmail] = useState('')
 
-  const {showToast} = useToast()
+  const { showToast } = useToast()
 
   const handleInputChange = (event) => {
     const { name, value } = event.target
@@ -58,24 +59,31 @@ const Signup = () => {
   }
 
   return (
-    <div className='login-page'>
-      <Container maxWidth='md'>
-        <Grid container spacing={3} direction='column' alignItems='center'>
-          <Grid item xs={12} sm={8} md={7}>
-            <img src={require('../images/tennismatch.png')} width='100%' alt='Tennis Match Logo' />
-          </Grid>
-          <Grid item xs={12}>
-            <SignupForm
-              usernameValue={signupUsername}
-              passwordValue={signupPassword}
-              emailValue={signupEmail}
-              handleInputChange={handleInputChange}
-              handleFormSubmit={handleFormSubmit}
-            />
-          </Grid>
-        </Grid>
-      </Container>
-    </div>
+    <Grid
+      className='full-page'
+      container
+      spacing={3}
+      direction='column'
+      alignItems='center'
+      justifyContent='space-evenly'
+    >
+      <Typography variant='h1'>{APP_NAME}</Typography>
+      <SignupForm
+        usernameValue={signupUsername}
+        passwordValue={signupPassword}
+        emailValue={signupEmail}
+        handleInputChange={handleInputChange}
+        handleFormSubmit={handleFormSubmit}
+      />
+      <Box>
+        <div className='subtitle-and-instructions'>
+          <p>Already a member?</p>
+          <Button variant='contained' href='/'>
+            LOG IN
+          </Button>
+        </div>
+      </Box>
+    </Grid>
   )
 }
 

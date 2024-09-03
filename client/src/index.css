@@ -1,18 +1,15 @@
 body {
   margin: 0;
   margin-bottom: 100px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans',
+    'Droid Sans', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
-
 
 .fc-day:hover {
   cursor: pointer;
@@ -20,9 +17,7 @@ code {
 
 @font-face {
   font-family: 'coolvetica';
-  src: local('coolvetica'), url(./fonts/coolvetica.ttf) format('truetype');
-}
-
-body.login-page body.signup-page {
-  background-color: #91e631;
+  src:
+    local('coolvetica'),
+    url(./fonts/coolvetica.ttf) format('truetype');
 }

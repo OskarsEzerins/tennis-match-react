@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 
+import { APP_NAME } from '../../utils/constants'
 import Drawer from '../Drawer'
 import './style.css'
 
-import { Grid, Box, useMediaQuery, AppBar } from '@material-ui/core'
+import { Grid, useMediaQuery, AppBar, Typography } from '@material-ui/core'
 import Paper from '@material-ui/core/Paper'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
@@ -44,15 +45,14 @@ const Nav = (props) => {
   return (
     <AppBar position='sticky'>
       <div className='upper-nav row'>
-        <Grid container item xs={12} spacing={3} alignItems='center'>
-          <Grid item xs={3} sm={4}>
+        <Grid container alignItems='center' justifyContent='space-between'>
+          <Grid item>
             <Drawer />
           </Grid>
-
-          <Grid item xs={6} sm={4}>
-            <Box display='flex' justifyContent='center' alignItems='center'>
-              <img src={require('../../images/tennismatch.png')} id='login-logo' width='100%' alt='tennis-match-logo' />
-            </Box>
+          <Grid item xs>
+            <Grid container justifyContent='center'>
+              <Typography variant='h1'>{APP_NAME}</Typography>
+            </Grid>
           </Grid>
         </Grid>
       </div>

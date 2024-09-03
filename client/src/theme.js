@@ -48,8 +48,8 @@ const DARK_PALETTE = {
     contrastText: BLACK
   },
   background: {
-    paper: grey[900],
-    default: grey[800]
+    paper: BLACK,
+    default: BLACK
   },
   text: {
     primary: WHITE,
