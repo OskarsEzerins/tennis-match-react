@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 
 import { APP_NAME } from '../../utils/constants'
 import Drawer from '../Drawer'
-import './style.css'
 
 import { Grid, useMediaQuery, AppBar, Typography } from '@material-ui/core'
 import Paper from '@material-ui/core/Paper'
