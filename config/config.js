@@ -17,8 +17,7 @@ module.exports = {
     logging: false
   },
   production: {
-    // TODO: investigate
-    use_env_variable: 'JAWSDB_URL',
+    use_env_variable: 'DATABASE_URL',
     dialect: 'postgres'
   }
 }
