@@ -1,3 +1,4 @@
+- Fix theming
 - Add a way to see all other player availability
 - Opt out of notifications
 
