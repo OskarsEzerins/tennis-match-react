@@ -69,7 +69,7 @@ const ProposeUserSearch = (props) => {
               placeholder='Court Location'
               fullWidth
             >
-              {COURT_LIST.map((option) => (
+              {COURT_LIST.filter((court) => court !== 'any').map((option) => (
                 <MenuItem key={option} value={option}>
                   {option}
                 </MenuItem>

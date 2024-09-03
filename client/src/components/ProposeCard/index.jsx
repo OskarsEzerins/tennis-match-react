@@ -1,5 +1,7 @@
 import React from 'react'
 
+import { DEFAULT_DATE_TIME_FORMAT } from '../../utils/dates'
+
 import { makeStyles, Card, CardActions, CardContent, Button, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
@@ -19,39 +21,47 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const ProposeCard = (props) => {
+const ProposeCard = ({
+  event: {
+    title,
+    User: { id: userid, username, firstname, lastname, skill },
+    location: eventLocation,
+    start,
+    end
+  },
+  handleEventClick,
+  eventIndex
+}) => {
   const classes = useStyles()
 
   return (
     <Card className={classes.root} variant='outlined'>
       <CardContent>
         <Typography variant='h5' gutterBottom>
-          {props.title}
+          {title}
         </Typography>
         <Typography>
-          {props.userFirstname
-            ? `Username: ${props.username} (${props.userFirstname} ${props.userLastname})`
-            : `Username: ${props.username}`}
+          {firstname ? `Username: ${username} (${firstname} ${lastname})` : `Username: ${username}`}
         </Typography>
         <Typography color='textSecondary' gutterBottom>
-          Skill level: {props.userSkill ? `${props.userSkill}` : 'n/a'}
+          Skill level: {skill ? `${skill}` : 'n/a'}
         </Typography>
         <Typography variant='body2' component='p'>
-          Court Location: {props.eventLocation}
+          Court Location: {eventLocation}
           <br />
-          Start Time: {props.starttime}
+          Start Time: {start.format(DEFAULT_DATE_TIME_FORMAT)}
           <br />
-          End Time: {props.endtime}
+          End Time: {end.format(DEFAULT_DATE_TIME_FORMAT)}
         </Typography>
       </CardContent>
       <CardActions>
         <Button
           size='small'
           color='primary'
-          data-userid={props.userid}
-          data-location={props.eventLocation}
-          onClick={props.handleEventClick}
-          data-index={props.eventIndex}
+          data-userid={userid}
+          data-location={eventLocation}
+          onClick={handleEventClick}
+          data-index={eventIndex}
         >
           Propose Match
         </Button>

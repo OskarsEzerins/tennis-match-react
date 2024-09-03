@@ -51,11 +51,10 @@ const ProposeMuiModal = ({
   onHide,
   event: {
     title,
-    username,
     start: eventStart,
     end: eventEnd,
     location: chosenEventLocation,
-    User: { id: userId, firstname, lastname }
+    User: { id: userId, username, firstname, lastname }
   },
 
   state: { startTimeHour, startTimeMinute, endTimeHour, endTimeMinute, eventLocation },
@@ -130,7 +129,7 @@ const ProposeMuiModal = ({
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button data-userid={userId} onClick={handleProposeSubmit} color='primary'>
+        <Button onClick={() => handleProposeSubmit('proposeMatchByAvailability', userId)} color='primary'>
           Propose Match
         </Button>
         <Button onClick={onHide} color='secondary'>

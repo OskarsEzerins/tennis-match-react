@@ -95,7 +95,7 @@ const Drawer = () => {
   const itemsList = [
     { text: 'Feed', icon: <Public />, onClick: () => history.push('/feed') },
     { text: 'Availability', icon: <AddCircleOutline />, onClick: () => history.push('/availability') },
-    { text: 'Scheduler', icon: <Event />, onClick: () => history.push('/scheduler') },
+    { text: 'My Calendar', icon: <Event />, onClick: () => history.push('/scheduler') },
     { text: 'Propose Match', icon: <ThumbsUpDown />, onClick: () => history.push('/proposematch') },
     {
       text: 'Requests',

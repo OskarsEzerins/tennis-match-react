@@ -12,8 +12,8 @@ const NewEvent = () => {
   const [newDate, setNewDate] = useState('')
   const [startTime, setStartTime] = useState('18:00')
   const [endTime, setEndTime] = useState('19:00')
-  const [eventTitle, setEventTitle] = useState('')
-  const [eventLocation, setEventLocation] = useState('')
+  const [eventTitle, setEventTitle] = useState('Casual')
+  const [eventLocation, setEventLocation] = useState('any')
   const [navValue, _setNavValue] = useState('tab-two')
   const [courtList, _setCourtList] = useState(COURT_LIST)
 

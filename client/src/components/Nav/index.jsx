@@ -36,7 +36,7 @@ const Nav = () => {
   const buttons = [
     { path: '/feed', icon: Public, label: 'Feed' },
     { path: '/availability', icon: AddCircleOutlineIcon, label: 'Availability' },
-    { path: '/scheduler', icon: EventIcon, label: 'Scheduler' },
+    { path: '/scheduler', icon: EventIcon, label: 'My Calendar' },
     { path: '/proposematch', icon: ThumbsUpDown, label: 'Propose Match' },
     { path: '/requests', icon: AssignmentTurnedIn, label: 'Requests' }
   ]
@@ -53,7 +53,7 @@ const Nav = () => {
   }
 
   return (
-    <AppBar position='sticky' color='default'>
+    <AppBar position='sticky' color='default' style={{ paddingTop: '1vh' }}>
       <div className='upper-nav row'>
         <Grid container alignItems='center' justifyContent='space-between'>
           {isMobile && (

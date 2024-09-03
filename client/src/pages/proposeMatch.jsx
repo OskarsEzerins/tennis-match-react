@@ -7,7 +7,6 @@ import ProposeMatchForm from '../components/ProposeMatchForm'
 import ProposeUserSearch from '../components/ProposeUserSearch'
 import { useToast } from '../hooks'
 import { COURT_LIST } from '../utils/constants'
-import { DEFAULT_CLOCK_FORMAT } from '../utils/dates'
 
 import { Box, Button, Container, Grid } from '@material-ui/core'
 import moment from 'moment'
@@ -18,8 +17,8 @@ const socket = io()
 const DEFAULT_STATE = {
   eventValue: '',
   newDate: '',
-  startTime: '17:00',
-  endTime: '18:00',
+  startTime: '18:00',
+  endTime: '19:00',
   startTimeHour: '',
   startTimeMinute: '',
   endTimeHour: '',
@@ -32,7 +31,7 @@ const DEFAULT_STATE = {
   eventLocation: '',
   eventTitle: '',
   modalShow: false,
-  subsectionShow: '',
+  subsectionShow: 'date',
   courtList: COURT_LIST
 }
 
@@ -61,9 +60,44 @@ const ProposeMatch = () => {
     localStorage.removeItem('selectedDate')
   }, [])
 
+  const transformSearchedData = useCallback((res) => {
+    const searchArr = res.map((item) => ({
+      ...item,
+      start: moment(item.start),
+      end: moment(item.end),
+      User: {
+        ...item.User,
+        skilllevel: SKILL_LEVELS[item.User.skilllevel] || item.User.skilllevel
+      }
+    }))
+
+    setState((prevState) => ({ ...prevState, searchResult: searchArr }))
+    showToast(
+      searchArr.length ? 'Availability found!' : 'No availability on this date.',
+      searchArr.length ? 'success' : 'info'
+    )
+  }, [])
+
+  const handleDateFormSubmit = useCallback(
+    (event) => {
+      event?.preventDefault()
+
+      const searchURL = `/api/calendar/propose?date=${state.newDate}`
+      fetch(searchURL)
+        .then((res) => res.json())
+        .then((res) => {
+          transformSearchedData(res)
+        })
+        .catch((err) => console.log(err))
+    },
+    [state.newDate]
+  )
+
   useEffect(() => {
     getDate()
+    handleDateFormSubmit()
   }, [])
+
   const setModalShow = useCallback((bVal) => {
     setState((prevState) => ({
       ...prevState,
@@ -72,8 +106,8 @@ const ProposeMatch = () => {
       startTimeMinute: '',
       endTimeHour: '',
       endTimeMinute: '',
-      startTime: '17:00',
-      endTime: '18:00',
+      startTime: '18:00',
+      endTime: '19:00',
       eventValue: ''
     }))
   }, [])
@@ -133,43 +167,8 @@ const ProposeMatch = () => {
     }
   }, [])
 
-  const transformSearchedData = useCallback((res) => {
-    const searchArr = res.map((item) => ({
-      ...item,
-      start: moment(item.start),
-      end: moment(item.end),
-      User: {
-        ...item.User,
-        skilllevel: SKILL_LEVELS[item.User.skilllevel] || item.User.skilllevel
-      }
-    }))
-
-    setState((prevState) => ({ ...prevState, searchResult: searchArr }))
-    showToast(
-      searchArr.length ? 'Availability found!' : 'No availability on this date.',
-      searchArr.length ? 'success' : 'info'
-    )
-  }, [])
-
-  const handleFormSubmit = useCallback(
-    (event) => {
-      event.preventDefault()
-
-      const searchURL = `/api/calendar/propose?date=${state.newDate}`
-      fetch(searchURL)
-        .then((res) => res.json())
-        .then((res) => {
-          transformSearchedData(res)
-        })
-        .catch((err) => console.log(err))
-    },
-    [state.newDate]
-  )
-
   const handleProposeSubmit = useCallback(
-    (event) => {
-      event.preventDefault()
-
+    (type, userId) => {
       const {
         newDate,
         startTime,
@@ -180,29 +179,22 @@ const ProposeMatch = () => {
         endTimeMinute,
         eventLocation,
         confirmedByUser,
-        eventTitle,
-        userId
+        eventTitle
       } = state
 
-      const currentStartDate = startTime
-        ? moment(`${newDate} ${startTime}`, 'YYYY-MM-DD HH:mm').toDate()
-        : moment(`${newDate} ${startTimeHour}:${startTimeMinute}`, 'YYYY-MM-DD HH:mm').toDate()
+      const currentStartDate =
+        type === 'proposeMatchByAvailability'
+          ? moment(`${newDate} ${startTimeHour}:${startTimeMinute}`, 'YYYY-MM-DD HH:mm').toDate()
+          : moment(`${newDate} ${startTime}`, 'YYYY-MM-DD HH:mm').toDate()
 
-      const currentEndDate = endTime
-        ? moment(`${newDate} ${endTime}`, 'YYYY-MM-DD HH:mm').toDate()
-        : moment(`${newDate} ${endTimeHour}:${endTimeMinute}`, 'YYYY-MM-DD HH:mm').toDate()
+      const currentEndDate =
+        type === 'proposeMatchByAvailability'
+          ? moment(`${newDate} ${endTimeHour}:${endTimeMinute}`, 'YYYY-MM-DD HH:mm').toDate()
+          : moment(`${newDate} ${endTime}`, 'YYYY-MM-DD HH:mm').toDate()
 
-      const currentProposeToUserId = event.currentTarget.dataset.userid || userId
+      const currentProposeToUserId = userId ?? state.userId
 
-      const invalidStates = [
-        startTimeHour,
-        startTimeMinute,
-        endTimeHour,
-        endTimeMinute,
-        eventLocation,
-        confirmedByUser,
-        eventTitle
-      ]
+      const invalidStates = [eventLocation, confirmedByUser, eventTitle]
       const invalidValues = ['Choose...', 'any', '']
 
       if (invalidStates.some((state) => invalidValues.includes(state))) {
@@ -226,11 +218,11 @@ const ProposeMatch = () => {
           .then((res) => {
             socket.emit('newMatchNotification', currentProposeToUserId)
 
-            if (res.statusString === 'eventCreated') {
+            if (res.statusString === 'error') {
+              showToast(`Oops! ${res.error}`, 'error', 'error')
+            } else {
               savePendingToast('Your request for a match has been sent!', 'success')
               window.location.assign('/scheduler')
-            } else {
-              showToast('Oops! Something went wrong. Please try again.', 'error')
             }
           })
           .catch((err) => console.log(err))
@@ -266,11 +258,11 @@ const ProposeMatch = () => {
         <ProposeMatchForm
           handleInputChange={handleInputChange}
           newDate={state.newDate}
-          handleFormSubmit={handleFormSubmit}
+          handleFormSubmit={handleDateFormSubmit}
         />
       )
     }
-  }, [state, handleNewChange, handleInputChange, handleProposeSubmit, handleUsernameChange, handleFormSubmit])
+  }, [state, handleNewChange, handleInputChange, handleProposeSubmit, handleUsernameChange, handleDateFormSubmit])
 
   const setSubShow = useCallback(
     (event) => {
@@ -307,20 +299,7 @@ const ProposeMatch = () => {
           <Grid item>
             <Box display='flex' alignItems='center' justifyContent='center' flexWrap='wrap' style={{ gap: '10px' }}>
               {state.searchResult.map((event, i) => (
-                <ProposeCard
-                  key={i}
-                  title={event.title}
-                  userid={event.UserId}
-                  username={event.User.username}
-                  userFirstname={event.User.firstname}
-                  userLastname={event.User.lastname}
-                  userSkill={event.User.skilllevel}
-                  eventLocation={event.location}
-                  starttime={moment(event.start).format(DEFAULT_CLOCK_FORMAT)}
-                  endtime={moment(event.end).format(DEFAULT_CLOCK_FORMAT)}
-                  eventIndex={i}
-                  handleEventClick={handleEventClick}
-                />
+                <ProposeCard key={i} event={event} eventIndex={i} handleEventClick={handleEventClick} />
               ))}
             </Box>
           </Grid>
