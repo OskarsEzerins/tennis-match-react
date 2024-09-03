@@ -76,12 +76,10 @@ const Signup = () => {
         handleFormSubmit={handleFormSubmit}
       />
       <Box>
-        <div className='subtitle-and-instructions'>
-          <p>Already a member?</p>
-          <Button variant='contained' href='/'>
-            LOG IN
-          </Button>
-        </div>
+        <Typography>Already a member?</Typography>
+        <Button variant='contained' href='/'>
+          LOG IN
+        </Button>
       </Box>
     </Grid>
   )

@@ -1,5 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
 
+import { useToast } from '../../hooks'
+
 import {
   Drawer as MUIDrawer,
   Badge,
@@ -19,9 +21,9 @@ import {
   Event,
   ExitToApp,
   Public,
-  SportsTennis,
   ThumbsUpDown
 } from '@material-ui/icons'
+import MenuIcon from '@material-ui/icons/Menu'
 import clsx from 'clsx'
 import { useHistory } from 'react-router-dom'
 import io from 'socket.io-client'
@@ -30,8 +32,7 @@ const socket = io()
 
 const useStyles = makeStyles({
   list: { width: 250 },
-  fullList: { width: 'auto' },
-  tennisButton: { color: 'white', fontSize: '3em' }
+  fullList: { width: 'auto' }
 })
 
 const Drawer = () => {
@@ -44,6 +45,8 @@ const Drawer = () => {
     notifications: false,
     userid: null
   })
+
+  const { savePendingToast } = useToast()
 
   useEffect(() => {
     const getNotifications = async () => {
@@ -85,22 +88,14 @@ const Drawer = () => {
 
   const handleLogout = async () => {
     await fetch('/logout')
+    savePendingToast('You have been logged out', 'info')
     window.location.href = '/'
   }
 
   const itemsList = [
-    { text: 'Profile', icon: <AccountCircle />, onClick: () => history.push('/profile') },
-    { text: 'Availability', icon: <AddCircleOutline />, onClick: () => history.push('/availability') },
     { text: 'Feed', icon: <Public />, onClick: () => history.push('/feed') },
-    {
-      text: 'Messenger',
-      icon: (
-        <Badge badgeContent={notificationState.messages} color='secondary'>
-          <ChatBubbleOutline />
-        </Badge>
-      ),
-      onClick: () => history.push('/messenger')
-    },
+    { text: 'Availability', icon: <AddCircleOutline />, onClick: () => history.push('/availability') },
+    { text: 'Scheduler', icon: <Event />, onClick: () => history.push('/scheduler') },
     { text: 'Propose Match', icon: <ThumbsUpDown />, onClick: () => history.push('/proposematch') },
     {
       text: 'Requests',
@@ -111,7 +106,16 @@ const Drawer = () => {
       ),
       onClick: () => history.push('/requests')
     },
-    { text: 'Scheduler', icon: <Event />, onClick: () => history.push('/scheduler') },
+    {
+      text: 'Messenger',
+      icon: (
+        <Badge badgeContent={notificationState.messages} color='secondary'>
+          <ChatBubbleOutline />
+        </Badge>
+      ),
+      onClick: () => history.push('/messenger')
+    },
+    { text: 'Profile', icon: <AccountCircle />, onClick: () => history.push('/profile') },
     { text: 'Log Out', icon: <ExitToApp />, onClick: handleLogout }
   ]
 
@@ -146,7 +150,7 @@ const Drawer = () => {
             anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
             invisible={!notificationState.notifications}
           >
-            <SportsTennis className={clsx(classes.tennisButton)} />
+            <MenuIcon />
           </Badge>
         </Button>
         <MUIDrawer anchor={anchor} open={state[anchor]} onClose={toggleDrawer(anchor, false)}>

@@ -1,9 +1,8 @@
 import React from 'react'
 
 import Form from '../Form'
-import './style.css'
 
-import { makeStyles, TextField, Button, Box } from '@material-ui/core'
+import { makeStyles, TextField, Button, Box, Typography } from '@material-ui/core'
 
 const useStyles = makeStyles((_theme) => ({
   input: {
@@ -18,9 +17,9 @@ const SignupForm = ({ handleInputChange, handleFormSubmit, usernameValue, emailV
 
   return (
     <div>
-      <div className='subtitle-and-instructions'>
-        <h2>Create Account</h2>
-      </div>
+      <Typography variant='h2' align='center'>
+        Create Account
+      </Typography>
 
       <Form onSubmit={handleFormSubmit}>
         <Box display='flex' justifyContent='center' alignItems='center'>

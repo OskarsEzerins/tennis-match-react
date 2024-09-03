@@ -66,12 +66,10 @@ const Login = () => {
         handleFormSubmit={handleFormSubmit}
       />
       <Box>
-        <div className='subtitle-and-instructions'>
-          <p>First time here?</p>
-          <Button variant='contained' href='/signup'>
-            SIGN UP
-          </Button>
-        </div>
+        <Typography>First time here?</Typography>
+        <Button variant='contained' href='/signup'>
+          SIGN UP
+        </Button>
       </Box>
     </Grid>
   )

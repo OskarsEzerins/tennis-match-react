@@ -58,7 +58,6 @@ const Messenger = ({ classes }) => {
   const [users, setUsers] = useState([])
   const [rooms, setRooms] = useState([])
   const [userSearch, setUserSearch] = useState('')
-  const [navValue, _setNavValue] = useState('')
   const [userId, setUserId] = useState('')
   const [subsectionShow, setSubsectionShow] = useState('inbox')
   const [bottomNavValue, setBottomNavValue] = useState('inbox-tab')
@@ -381,7 +380,7 @@ const Messenger = ({ classes }) => {
 
   return (
     <div>
-      <Nav update={navValue} />
+      <Nav />
       {subsectionRender()}
       <BottomNav
         value={bottomNavValue}
