@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useMemo } from 'react'
 
 import Feed from './pages/feed'
 import Login from './pages/login'
@@ -9,27 +9,21 @@ import ProposeMatch from './pages/proposeMatch'
 import Requests from './pages/requests'
 import Scheduler from './pages/scheduler'
 import Signup from './pages/signup'
+import { TennisTheme } from './theme'
 import withAuth from './withAuth'
 
-import { useMediaQuery } from '@material-ui/core'
-import { createTheme, ThemeProvider } from '@material-ui/core/styles'
+import { CssBaseline, useMediaQuery } from '@material-ui/core'
+import { ThemeProvider } from '@material-ui/core/styles'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 
 function App() {
   const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
-  const theme = React.useMemo(
-    () =>
-      createTheme({
-        palette: {
-          type: prefersDarkMode ? 'dark' : 'light'
-        }
-      }),
-    [prefersDarkMode]
-  )
+  const theme = useMemo(() => TennisTheme(prefersDarkMode), [prefersDarkMode])
 
   return (
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <Router>
         {/* <Jumbotron /> */}
         {/* <Route exact path="/" component={withAuth(Messenger)} /> */}

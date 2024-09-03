@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import Drawer from '../Drawer'
 import './style.css'
 
-import { Grid, Box, useMediaQuery } from '@material-ui/core'
+import { Grid, Box, useMediaQuery, AppBar } from '@material-ui/core'
 import Paper from '@material-ui/core/Paper'
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
@@ -42,7 +42,7 @@ const Nav = (props) => {
   }
 
   return (
-    <div className='entire-nav'>
+    <AppBar position='sticky'>
       <div className='upper-nav row'>
         <Grid container item xs={12} spacing={3} alignItems='center'>
           <Grid item xs={3} sm={4}>
@@ -70,7 +70,7 @@ const Nav = (props) => {
           </Tabs>
         </Paper>
       </div>
-    </div>
+    </AppBar>
   )
 }
 

@@ -9,7 +9,6 @@ import { DEFAULT_CLOCK_FORMAT, DEFAULT_DATE_FORMAT } from '../utils/dates'
 import './style.css'
 
 import { Container, Box, Typography } from '@material-ui/core'
-import { teal, green } from '@material-ui/core/colors'
 import InfoIcon from '@material-ui/icons/Info'
 import moment from 'moment'
 
@@ -131,23 +130,17 @@ const Scheduler = () => {
         <Box marginTop='20px'>
           <Calendar handleDateClick={handleDateClick} events={calendarEvents} handleEventClick={handleEventClick} />
         </Box>
-        <Box
-          margin='20px'
-          padding='20px'
-          bgcolor={teal[50]}
-          border={`1px solid ${green[500]}`}
-          borderRadius='8px'
-          display='flex'
-          alignItems='left'
-          flexDirection='column'
-        >
-          <Box display='flex' alignItems='center'>
+        <Box marginTop='20px' borderRadius='8px' display='flex' alignItems='top' justifyContent='space-between'>
+          <Box display='flex' alignItems='top'>
             <InfoIcon style={{ marginRight: '8px' }} />
             <Typography variant='subtitle1'>Click on a time slot to create or find a match.</Typography>
           </Box>
-          <MatchStatusIndicator color='red' label='Denied match' />
-          <MatchStatusIndicator color='blue' label='Proposed match / Marked availability' />
-          <MatchStatusIndicator color='green' label='Confirmed match' />
+          <Box display='flex' alignItems='left' flexDirection='column'>
+            <MatchStatusIndicator color='red' label='Denied match' />
+            {/* TODO: recheck */}
+            <MatchStatusIndicator color='blue' label='Proposed match / Marked availability' />
+            <MatchStatusIndicator color='green' label='Confirmed match' />
+          </Box>
         </Box>
         <SchedulerModal
           show={dateModalShow}
