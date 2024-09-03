@@ -15,7 +15,7 @@ export const NewEventForm = ({
   endTime,
   startTime
 }) => {
-  const toast = useToast()
+  const { showToast } = useToast()
 
   return (
     <Grid item xs={12}>
@@ -128,10 +128,10 @@ export const NewEventForm = ({
               </Box>
               <Button
                 variant='contained'
-                color='secondary'
+                color='default'
                 onClick={() => {
                   handleReset()
-                  toast('Form reset', 'warning')
+                  showToast('Form has been reset', 'warning')
                 }}
               >
                 Reset

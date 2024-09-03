@@ -28,33 +28,39 @@ const CustomTextField = ({ label, id, name, value, onChange, options }) => (
     variant='outlined'
     fullWidth
   >
-    {options.map((option) => (
-      <MenuItem key={option.value} value={option.value}>
-        {option.value}
+    {options?.map((option) => (
+      <MenuItem key={option} value={option}>
+        {option}
       </MenuItem>
     ))}
   </TextField>
 )
 
+const CLOCK_OPTIONS = ['00', '15', '30', '45']
+
+const generateEventStartOptions = (moment) =>
+  Array.from({ length: 5 }, (_, i) =>
+    moment
+      .clone()
+      .add(i - 2, 'hours')
+      .format('HH')
+  )
+
 const ProposeMuiModal = ({
   show,
   onHide,
-  title,
-  username,
-  userFirstname,
-  userLastname,
-  eventLocationTwo,
-  eventLocation,
-  defaultEventLocation,
-  handleInputChange,
-  startTimeHour,
-  startIntArr,
-  startTimeMinute,
-  endTimeHour,
-  endIntArr,
-  endTimeMinute,
+  event: {
+    title,
+    username,
+    start: eventStart,
+    end: eventEnd,
+    location: chosenEventLocation,
+    User: { id: userId, firstname, lastname }
+  },
+
+  state: { startTimeHour, startTimeMinute, endTimeHour, endTimeMinute, eventLocation },
   handleProposeSubmit,
-  userid
+  handleInputChange
 }) => {
   const theme = useTheme()
   const fullScreen = useMediaQuery(theme.breakpoints.down('xs'))
@@ -64,20 +70,20 @@ const ProposeMuiModal = ({
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {userFirstname ? `Username: ${username} (${userFirstname} ${userLastname})` : `Username: ${username}`}
+          {firstname ? `Username: ${username} (${firstname} ${lastname})` : `Username: ${username}`}
           <br />
-          {eventLocationTwo !== 'any' && `Location: ${eventLocationTwo}`}
+          {chosenEventLocation !== 'any' && `Location: ${chosenEventLocation}`}
         </DialogContentText>
         <Grid container spacing={1}>
-          {eventLocationTwo === 'any' && (
+          {chosenEventLocation === 'any' && (
             <Grid item xs={12}>
               <CustomTextField
                 label='Court Location'
                 id='eventLocation'
                 name='eventLocation'
-                value={eventLocation === 'any' ? defaultEventLocation : eventLocation}
+                value={eventLocation}
                 onChange={handleInputChange}
-                options={COURT_LIST.map((court) => ({ value: court, display: court }))}
+                options={COURT_LIST.filter((court) => court !== 'any')}
               />
             </Grid>
           )}
@@ -88,7 +94,7 @@ const ProposeMuiModal = ({
               name='startTimeHour'
               value={startTimeHour}
               onChange={handleInputChange}
-              options={startIntArr.map((hour) => ({ value: hour.value, display: hour.display }))}
+              options={generateEventStartOptions(eventStart)}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -98,12 +104,7 @@ const ProposeMuiModal = ({
               name='startTimeMinute'
               value={startTimeMinute}
               onChange={handleInputChange}
-              options={[
-                { value: '00', display: ':00' },
-                { value: '15', display: ':15' },
-                { value: '30', display: ':30' },
-                { value: '45', display: ':45' }
-              ]}
+              options={CLOCK_OPTIONS}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -113,7 +114,7 @@ const ProposeMuiModal = ({
               name='endTimeHour'
               value={endTimeHour}
               onChange={handleInputChange}
-              options={endIntArr.map((hour) => ({ value: hour.value, display: hour.display }))}
+              options={generateEventStartOptions(eventEnd)}
             />
           </Grid>
           <Grid item xs={12} sm={6}>
@@ -123,18 +124,13 @@ const ProposeMuiModal = ({
               name='endTimeMinute'
               value={endTimeMinute}
               onChange={handleInputChange}
-              options={[
-                { value: '00', display: ':00' },
-                { value: '15', display: ':15' },
-                { value: '30', display: ':30' },
-                { value: '45', display: ':45' }
-              ]}
+              options={CLOCK_OPTIONS}
             />
           </Grid>
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button data-userid={userid} onClick={handleProposeSubmit} color='primary'>
+        <Button data-userid={userId} onClick={handleProposeSubmit} color='primary'>
           Propose Match
         </Button>
         <Button onClick={onHide} color='secondary'>

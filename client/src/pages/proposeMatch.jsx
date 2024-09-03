@@ -9,7 +9,7 @@ import { useToast } from '../hooks'
 import { COURT_LIST } from '../utils/constants'
 import { DEFAULT_CLOCK_FORMAT } from '../utils/dates'
 
-import { Button, Container, Grid } from '@material-ui/core'
+import { Box, Button, Container, Grid } from '@material-ui/core'
 import moment from 'moment'
 import io from 'socket.io-client'
 
@@ -36,32 +36,15 @@ const DEFAULT_STATE = {
   courtList: COURT_LIST
 }
 
-const createIntArr = (start, end, formatTime, isReversed = false) => {
-  const length = end - start + 1
-  return Array.from({ length }, (_, j) => {
-    const value = isReversed ? end - j : start + j
-    return { value, display: formatTime(value) }
-  })
+const SKILL_LEVELS = {
+  1: '1.0-1.5 - New Player',
+  2: '2.0 - Beginner',
+  3: '2.5 - Beginner +',
+  4: '3.0 - Beginner-Intermediate',
+  5: '3.5 - Intermediate',
+  6: '4.0 - Intermediate-Advanced',
+  7: '4.5 - Advanced'
 }
-
-const transformMatchData = (res, formatTime, skillLevels) =>
-  res.map((item) => {
-    const startHour = parseInt(moment(item.start).format('HH'))
-    const endHour = parseInt(moment(item.end).format('HH'))
-
-    const startIntArr = createIntArr(startHour, endHour, formatTime)
-    const endIntArr = createIntArr(startHour, endHour, formatTime, true)
-
-    return {
-      ...item,
-      User: {
-        ...item.User,
-        skilllevel: skillLevels[item.User.skilllevel] || item.User.skilllevel
-      },
-      startIntArr,
-      endIntArr
-    }
-  })
 
 const ProposeMatch = () => {
   const [state, setState] = useState(DEFAULT_STATE)
@@ -97,15 +80,19 @@ const ProposeMatch = () => {
 
   const handleEventClick = useCallback(
     (arg) => {
-      const eventIndex = arg.currentTarget.dataset.index
-      const eventIndexArr = [state.searchResult[eventIndex]]
+      const { index, location } = arg.currentTarget.dataset
+      const event = state.searchResult[index]
 
       setState((prevState) => ({
         ...prevState,
         modalShow: true,
-        clickedResult: eventIndexArr,
-        eventLocation: arg.currentTarget.dataset.location,
-        eventTitle: eventIndexArr[0].title
+        clickedResult: [event],
+        eventLocation: location,
+        eventTitle: event.title,
+        startTimeHour: moment(event.start).format('HH'),
+        startTimeMinute: moment(event.start).format('mm'),
+        endTimeHour: moment(event.end).format('HH'),
+        endTimeMinute: moment(event.end).format('mm')
       }))
     },
     [state.searchResult]
@@ -146,25 +133,21 @@ const ProposeMatch = () => {
     }
   }, [])
 
-  const addInputTimes = useCallback((res) => {
-    const skillLevels = {
-      1: '1.0-1.5 - New Player',
-      2: '2.0 - Beginner',
-      3: '2.5 - Beginner +',
-      4: '3.0 - Beginner-Intermediate',
-      5: '3.5 - Intermediate',
-      6: '4.0 - Intermediate-Advanced',
-      7: '4.5 - Advanced'
-    }
-
-    const formatTime = (hour) => moment(`2020-09-18 ${hour}:00:00`).format('h (a)')
-
-    const searchArr = transformMatchData(res, formatTime, skillLevels)
+  const transformSearchedData = useCallback((res) => {
+    const searchArr = res.map((item) => ({
+      ...item,
+      start: moment(item.start),
+      end: moment(item.end),
+      User: {
+        ...item.User,
+        skilllevel: SKILL_LEVELS[item.User.skilllevel] || item.User.skilllevel
+      }
+    }))
 
     setState((prevState) => ({ ...prevState, searchResult: searchArr }))
     showToast(
-      searchArr.length === 0 ? 'No availability on this date.' : 'Availability found!',
-      searchArr.length === 0 ? 'info' : 'success'
+      searchArr.length ? 'Availability found!' : 'No availability on this date.',
+      searchArr.length ? 'success' : 'info'
     )
   }, [])
 
@@ -176,7 +159,7 @@ const ProposeMatch = () => {
       fetch(searchURL)
         .then((res) => res.json())
         .then((res) => {
-          addInputTimes(res)
+          transformSearchedData(res)
         })
         .catch((err) => console.log(err))
     },
@@ -293,10 +276,7 @@ const ProposeMatch = () => {
     (event) => {
       setState((_prevState) => ({ ...DEFAULT_STATE, subsectionShow: event.currentTarget.value }))
 
-      if (event.currentTarget.value === 'player') {
-        showToast("Type in a player's name and fill out the form below.", 'info')
-      } else if (event.currentTarget.value === 'date') {
-        showToast("Pick a date to search for other player's availability.", 'info')
+      if (event.currentTarget.value === 'date') {
         getDate()
       }
     },
@@ -324,9 +304,9 @@ const ProposeMatch = () => {
 
           {subsectionRender()}
 
-          <Grid container spacing={3} direction='column' alignItems='center'>
-            {state.searchResult.map((event, i) => (
-              <Grid key={i} item xs={12}>
+          <Grid item>
+            <Box display='flex' alignItems='center' justifyContent='center' flexWrap='wrap' style={{ gap: '10px' }}>
+              {state.searchResult.map((event, i) => (
                 <ProposeCard
                   key={i}
                   title={event.title}
@@ -341,8 +321,8 @@ const ProposeMatch = () => {
                   eventIndex={i}
                   handleEventClick={handleEventClick}
                 />
-              </Grid>
-            ))}
+              ))}
+            </Box>
           </Grid>
 
           {state.clickedResult.map((event) => (
@@ -350,24 +330,10 @@ const ProposeMatch = () => {
               key={event.id}
               show={state.modalShow}
               onHide={() => setModalShow(false)}
-              title={event.title}
-              userid={event.UserId}
-              username={event.User.username}
-              userFirstname={event.User.firstname}
-              userLastname={event.User.lastname}
-              eventLocation={state.eventLocation}
-              eventLocationTwo={event.location}
-              starttime={moment(event.start).format(DEFAULT_CLOCK_FORMAT)}
-              endtime={moment(event.end).format(DEFAULT_CLOCK_FORMAT)}
-              startIntArr={event.startIntArr}
-              endIntArr={event.endIntArr}
-              startTimeHour={state.startTimeHour}
-              startTimeMinute={state.startTimeMinute}
-              endTimeHour={state.endTimeHour}
-              endTimeMinute={state.endTimeMinute}
               handleInputChange={handleInputChange}
               handleProposeSubmit={handleProposeSubmit}
-              defaultEventLocation={state.defaultEventLocation}
+              event={event}
+              state={state}
             />
           ))}
         </Grid>
