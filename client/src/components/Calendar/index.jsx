@@ -7,8 +7,7 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import timeGridPlugin from '@fullcalendar/timegrid'
-
-// import { useTheme } from '@material-ui/core'
+import { useTheme } from '@material-ui/core'
 
 const CLOCK_FORMAT = {
   hour: '2-digit',
@@ -19,8 +18,15 @@ const CLOCK_FORMAT = {
 }
 
 const Calendar = ({ handleDateClick, events, handleEventClick }) => {
-  // TODO: fix day names color
-  // const theme = useTheme()
+  const theme = useTheme()
+
+  const dayHeaderStyle = {
+    backgroundColor: theme.palette.background.default,
+    color: theme.palette.text.primary,
+    padding: '10px'
+  }
+
+  console.debug(dayHeaderStyle)
 
   return (
     <FullCalendar
@@ -33,7 +39,6 @@ const Calendar = ({ handleDateClick, events, handleEventClick }) => {
       timeFormat={DEFAULT_CLOCK_FORMAT}
       slotLabelFormat={CLOCK_FORMAT}
       eventTimeFormat={CLOCK_FORMAT}
-      color
       slotMinTime='06:00:00'
       slotMaxTime='23:00:00'
       headerToolbar={{
@@ -41,6 +46,8 @@ const Calendar = ({ handleDateClick, events, handleEventClick }) => {
         center: 'title',
         right: 'dayGridMonth,timeGridWeek,timeGridDay'
       }}
+      dayHeaderContent={(args) => <div style={dayHeaderStyle}>{args.text}</div>}
+      firstDay={1}
     />
   )
 }
