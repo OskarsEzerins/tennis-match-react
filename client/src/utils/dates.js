@@ -1,3 +1,6 @@
 export const DEFAULT_DATE_FORMAT = 'DD.MM.YYYY'
 export const DEFAULT_DATE_TIME_FORMAT = 'HH:mm, DD.MM.YY'
+export const DEFAULT_DATE_TIME_SHORT_FORMAT = 'HH:mm, DD.MM'
 export const DEFAULT_CLOCK_FORMAT = 'HH:mm'
+
+export const DEFAULT_FIELD_DATE_FORMAT = 'YYYY-MM-DD'

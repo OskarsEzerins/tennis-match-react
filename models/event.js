@@ -53,6 +53,7 @@ module.exports = function (sequelize, DataTypes) {
     const overlappingEvent = await Event.findOne({
       where: {
         UserId: event.UserId,
+        eventStatus: event.eventStatus,
         [Op.or]: [
           {
             start: {

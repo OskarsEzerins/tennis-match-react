@@ -46,7 +46,7 @@ const generateEventStartOptions = (moment) =>
       .format('HH')
   )
 
-const ProposeMuiModal = ({
+const ProposeModalForm = ({
   show,
   onHide,
   event: {
@@ -69,7 +69,7 @@ const ProposeMuiModal = ({
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          {firstname ? `Username: ${username} (${firstname} ${lastname})` : `Username: ${username}`}
+          Player: {firstname ? `${username} (${firstname} ${lastname})` : `${username}`}
           <br />
           {chosenEventLocation !== 'any' && `Location: ${chosenEventLocation}`}
         </DialogContentText>
@@ -140,4 +140,4 @@ const ProposeMuiModal = ({
   )
 }
 
-export default ProposeMuiModal
+export default ProposeModalForm

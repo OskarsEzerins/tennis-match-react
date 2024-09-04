@@ -1,10 +1,9 @@
 import React from 'react'
 
 import { DEFAULT_CLOCK_FORMAT } from '../../utils/dates'
-import { CARD_WIDTH } from '../FindMatch/common'
+import { CARD_WIDTH } from './common'
 
 import { makeStyles, Card, CardActions, CardContent, Button, Typography, Avatar, Grid } from '@material-ui/core'
-import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -50,42 +49,40 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 
-const RequestCard = ({ event: { id: eventId, title, User, location, start, end }, handleConfirm, handleDeny }) => {
+const PlayerAvailabilityCard = ({
+  event: {
+    title,
+    User: { id: userid, username, firstname, lastname, skill },
+    location: eventLocation,
+    start,
+    end
+  },
+  handleEventClick,
+  eventIndex
+}) => {
   const classes = useStyles()
 
-  const {
-    firstname: proposerFirstName,
-    lastname: proposerLastname,
-    username: proposerUsername,
-    skilllevel: proposerSkillLevel
-  } = User
-
-  const firstAndLastName = `${proposerFirstName} ${proposerLastname}`
-  const startMoment = moment(start)
-  const endMoment = moment(end)
+  const firstAndLastName = `${firstname} ${lastname}`
 
   return (
     <Card className={classes.root} variant='outlined'>
       <CardContent className={classes.content}>
         <Grid container spacing={2} alignItems='center' justifyContent='center'>
           <Grid item>
-            <Avatar className={classes.avatar}>{proposerUsername.charAt(0)}</Avatar>
+            <Avatar className={classes.avatar}>{username.charAt(0)}</Avatar>
           </Grid>
           <Grid item xs>
-            <Typography className={classes.title}>{firstAndLastName ? firstAndLastName : proposerUsername}</Typography>
-            <Typography className={classes.subtitle}>
-              Skill level: {proposerSkillLevel ? `${proposerSkillLevel}` : 'n/a'}
-            </Typography>
+            <Typography className={classes.title}>{firstAndLastName ? firstAndLastName : username}</Typography>
+            <Typography className={classes.subtitle}>Skill level: {skill ? `${skill}` : 'n/a'}</Typography>
           </Grid>
         </Grid>
         <div className={classes.highlight}>
           <Typography variant='body1' component='p' className={classes.subtitle}>
-            {startMoment.format(DEFAULT_CLOCK_FORMAT)} - {endMoment.format(DEFAULT_CLOCK_FORMAT)},{' '}
-            {startMoment.format('dddd, D. MMM')}
+            {start.format(DEFAULT_CLOCK_FORMAT)} - {end.format(DEFAULT_CLOCK_FORMAT)}, {start.format('dddd, D. MMM')}
           </Typography>
         </div>
         <Typography variant='body2' component='p' className={classes.subtitle}>
-          Court: {location}
+          Court: {eventLocation}
           <br />
           Type: {title.toLowerCase()}
           <br />
@@ -98,28 +95,16 @@ const RequestCard = ({ event: { id: eventId, title, User, location, start, end }
           variant='outlined'
           className={classes.button}
           fullWidth
-          data-event-id={eventId}
-          data-event-title={title}
-          data-start={start}
-          data-end={end}
-          onClick={handleConfirm}
+          data-userid={userid}
+          data-location={eventLocation}
+          onClick={handleEventClick}
+          data-index={eventIndex}
         >
-          Confirm
-        </Button>
-        <Button
-          size='large'
-          color='secondary'
-          variant='outlined'
-          className={classes.button}
-          fullWidth
-          data-event-id={eventId}
-          onClick={handleDeny}
-        >
-          Deny
+          Propose Match
         </Button>
       </CardActions>
     </Card>
   )
 }
 
-export default RequestCard
+export default PlayerAvailabilityCard

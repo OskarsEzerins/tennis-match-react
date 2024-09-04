@@ -274,25 +274,20 @@ module.exports = function (app) {
   })
 
   app.get('/api/calendar/propose', function (req, res) {
-    console.log('DATE!!!!: ' + req.query.date)
-    let dateSearch
-    if (req.query.date) {
-      const startOfDay = moment(req.query.date).startOf('day').toDate()
-      const endOfDay = moment(req.query.date).endOf('day').toDate()
-      dateSearch = { start: { [Op.between]: [startOfDay, endOfDay] } }
+    const { start_date: startDate, end_date: endDate, location, skill, user } = req.query
+
+    if (!startDate || !endDate) {
+      return res.status(400).json({ error: 'startDate and endDate query parameters are required' }).end()
     }
 
-    let locationSearch
-    if (req.query.location) {
-      locationSearch = { location: req.query.location }
-    }
+    const startOfDay = moment(startDate).startOf('day').toDate()
+    const endOfDay = moment(endDate).endOf('day').toDate()
+    const dateSearch = { start: { [Op.between]: [startOfDay, endOfDay] } }
 
-    let skillUserSearch = {}
-    if (req.query.skill) {
-      skillUserSearch.skilllevel = req.query.skill
-    }
-    if (req.query.user) {
-      skillUserSearch.id = req.query.user
+    const locationSearch = location ? { location } : {}
+    const skillUserSearch = {
+      ...(skill && { skilllevel: skill }),
+      ...(user && { id: user })
     }
 
     if (req.session.loggedin) {
@@ -313,9 +308,7 @@ module.exports = function (app) {
           }
         ],
         order: [['start', 'ASC']]
-      }).then(function (results) {
-        res.json(results)
-      })
+      }).then((results) => res.json(results))
     } else {
       res.status(400).end()
     }

@@ -2,11 +2,11 @@ import React, { useMemo } from 'react'
 
 import { ToastProvider } from './hooks'
 import Feed from './pages/feed'
+import FindMatch from './pages/findMatch'
 import Login from './pages/login'
 import Messenger from './pages/messenger'
 import Availability from './pages/newEventAvailability'
 import Profile from './pages/profile'
-import ProposeMatch from './pages/proposeMatch'
 import Requests from './pages/requests'
 import Scheduler from './pages/scheduler'
 import Signup from './pages/signup'
@@ -37,7 +37,7 @@ function App() {
           <Route exact path='/feed' component={withAuth(Feed)} />
           <Route exact path='/availability' component={withAuth(Availability)} />
           <Route exact path='/profile' component={withAuth(Profile)} />
-          <Route exact path='/proposematch' component={withAuth(ProposeMatch)} />
+          <Route exact path='/find_match' component={withAuth(FindMatch)} />
           <Route exact path='/requests' component={withAuth(Requests)} />
         </Router>
       </ToastProvider>

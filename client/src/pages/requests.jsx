@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useCallback } from 'react'
 
+import { CARD_WIDTH } from '../components/FindMatch/common'
 import Nav from '../components/Nav'
 import RequestCard from '../components/RequestCard'
-import RequestDisplay from '../components/RequestDisplay'
-import { DEFAULT_CLOCK_FORMAT } from '../utils/dates'
+import { useToast } from '../hooks'
+import { fetchWithErrorHandling, handleXhrError } from '../utils/xhrHelpers'
 
-import { Grid, Container } from '@material-ui/core'
-import moment from 'moment'
+import { Grid, Container, Typography } from '@material-ui/core'
 import io from 'socket.io-client'
 
 const socket = io()
@@ -24,6 +24,8 @@ const skillLevels = {
 const Requests = () => {
   const [searchResult, setSearchResult] = useState([])
   const [userid, setUserid] = useState('')
+
+  const { showToast } = useToast()
 
   const convertSkillLevel = useCallback((res) => {
     const searchArr = res.map((item) => ({
@@ -56,7 +58,7 @@ const Requests = () => {
       const titleArr = eventTitle.split('-')
       const updateObj = { id: eventId, title: 'Confirmed -' + titleArr[1] }
 
-      fetch('/api/calendar/requests', {
+      fetchWithErrorHandling('/api/calendar/requests', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateObj)
@@ -72,8 +74,9 @@ const Requests = () => {
         .then(() => {
           socket.emit('newMatchNotification', userid)
           getRequests()
+          showToast('Request confirmed', 'success')
         })
-        .catch((err) => console.log(err))
+        .catch((error) => handleXhrError(error, showToast))
     },
     [userid, getRequests]
   )
@@ -84,7 +87,7 @@ const Requests = () => {
       const { eventId } = event.currentTarget.dataset
       const updateObj = { id: eventId }
 
-      fetch('/api/event/deny', {
+      fetchWithErrorHandling('/api/event/deny', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(updateObj)
@@ -92,8 +95,9 @@ const Requests = () => {
         .then(() => {
           socket.emit('newMatchNotification', userid)
           getRequests()
+          showToast('Request denied', 'info')
         })
-        .catch((err) => console.log(err))
+        .catch((error) => handleXhrError(error, showToast))
     },
     [userid, getRequests]
   )
@@ -101,39 +105,30 @@ const Requests = () => {
   return (
     <div>
       <Nav />
-      <Container>
-        <Grid container spacing={3} direction='column' alignItems='center'>
-          <Grid item xs={12}>
-            <RequestDisplay />
+      <Container fixed>
+        <Grid container spacing={3} direction='column'>
+          <Grid item xs={12} style={{ textAlign: 'center' }}>
+            <Typography variant='h2'>Requests for Games</Typography>
           </Grid>
-          {searchResult.length !== 0 ? (
-            searchResult.map((event, i) => (
-              <Grid key={i} item xs={12}>
-                <RequestCard
-                  key={i}
-                  title={event.title}
-                  proposeUserid={event.UserId}
-                  proposeUsername={event.User.username}
-                  proposeUserFirstname={event.User.firstname}
-                  proposeUserLastname={event.User.lastname}
-                  proposeUserSkill={event.User.skilllevel}
-                  eventLocation={event.location}
-                  fullStarttime={event.start}
-                  fullEndtime={event.end}
-                  starttime={moment(event.start).format(DEFAULT_CLOCK_FORMAT)}
-                  endtime={moment(event.end).format(DEFAULT_CLOCK_FORMAT)}
-                  date={moment(event.start).format('L')}
-                  eventId={event.id}
-                  handleConfirm={handleConfirm}
-                  handleDeny={handleDeny}
-                />
+          <Grid item xs={12}>
+            {searchResult.length !== 0 ? (
+              <Grid
+                style={{
+                  display: 'grid',
+                  'grid-template-columns': `repeat(auto-fill, minmax(${CARD_WIDTH}, 1fr))`,
+                  gap: '10px'
+                }}
+              >
+                {searchResult.map((event, i) => (
+                  <RequestCard key={i} event={event} handleConfirm={handleConfirm} handleDeny={handleDeny} />
+                ))}
               </Grid>
-            ))
-          ) : (
-            <Grid item xs={12}>
-              <p>You currently have no requests.</p>
-            </Grid>
-          )}
+            ) : (
+              <Grid item xs={12}>
+                <p>You currently have no requests.</p>
+              </Grid>
+            )}
+          </Grid>
         </Grid>
       </Container>
     </div>

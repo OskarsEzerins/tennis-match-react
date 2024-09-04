@@ -21,7 +21,7 @@ import {
   Event,
   ExitToApp,
   Public,
-  ThumbsUpDown
+  Search
 } from '@material-ui/icons'
 import MenuIcon from '@material-ui/icons/Menu'
 import clsx from 'clsx'
@@ -96,7 +96,7 @@ const Drawer = () => {
     { text: 'Feed', icon: <Public />, onClick: () => history.push('/feed') },
     { text: 'Availability', icon: <AddCircleOutline />, onClick: () => history.push('/availability') },
     { text: 'My Calendar', icon: <Event />, onClick: () => history.push('/scheduler') },
-    { text: 'Propose Match', icon: <ThumbsUpDown />, onClick: () => history.push('/proposematch') },
+    { text: 'Find Match', icon: <Search />, onClick: () => history.push('/find_match') },
     {
       text: 'Requests',
       icon: (

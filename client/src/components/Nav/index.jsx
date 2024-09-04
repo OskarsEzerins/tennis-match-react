@@ -6,7 +6,7 @@ import Drawer from '../Drawer'
 
 import { Grid, useMediaQuery, AppBar, Typography, Button, Toolbar, ButtonGroup } from '@material-ui/core'
 import { useTheme } from '@material-ui/core/styles'
-import { AccountCircle, AssignmentTurnedIn, ChatBubbleOutline, ExitToApp, ThumbsUpDown } from '@material-ui/icons'
+import { AccountCircle, AssignmentTurnedIn, ChatBubbleOutline, ExitToApp, Search } from '@material-ui/icons'
 import AddCircleOutlineIcon from '@material-ui/icons/AddCircleOutline'
 import EventIcon from '@material-ui/icons/Event'
 import Public from '@material-ui/icons/Public'
@@ -37,7 +37,7 @@ const Nav = () => {
     { path: '/feed', icon: Public, label: 'Feed' },
     { path: '/availability', icon: AddCircleOutlineIcon, label: 'Availability' },
     { path: '/scheduler', icon: EventIcon, label: 'My Calendar' },
-    { path: '/proposematch', icon: ThumbsUpDown, label: 'Propose Match' },
+    { path: '/find_match', icon: Search, label: 'Find Match' },
     { path: '/requests', icon: AssignmentTurnedIn, label: 'Requests' }
   ]
 
@@ -53,7 +53,7 @@ const Nav = () => {
   }
 
   return (
-    <AppBar position='sticky' color='default' style={{ paddingTop: '1vh' }}>
+    <AppBar position='sticky' color='default' style={{ paddingTop: '1vh', marginBottom: '1vh' }}>
       <div className='upper-nav row'>
         <Grid container alignItems='center' justifyContent='space-between'>
           {isMobile && (

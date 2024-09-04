@@ -4,6 +4,7 @@ import Nav from '../components/Nav'
 import { NewEventForm } from '../components/NewEventForm'
 import { useToast } from '../hooks'
 import { COURT_LIST } from '../utils/constants'
+import { handleXhrError } from '../utils/xhrHelpers'
 
 import { Grid, Container } from '@material-ui/core'
 import moment from 'moment'
@@ -95,15 +96,13 @@ const NewEvent = () => {
       const res = await response.json()
 
       if (res.statusString === 'error') {
-        // showToast(`Oops! ${err.error}`, 'error', 'error')
-        showToast(`Oops! ${res.error}`, 'error', 'error')
+        showToast(`Oops! ${res.error}`, 'error')
       } else {
         handleSoftReset()
         showToast('Your availability has been successfully updated!', 'success')
       }
-    } catch (err) {
-      showToast('Oops! Something went wrong. Please try again.', 'error')
-      console.log(err)
+    } catch (error) {
+      handleXhrError({ error, showToast })
     }
   }
 

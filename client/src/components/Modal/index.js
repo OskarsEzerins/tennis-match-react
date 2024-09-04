@@ -28,7 +28,7 @@ export const SchedulerModal = (props) => {
         <Button onClick={props.onHide} color='primary' href='/availability'>
           Create Match
         </Button>
-        <Button onClick={props.onHide} color='primary' href='/proposematch'>
+        <Button onClick={props.onHide} color='primary' href='/find_match'>
           Find Match
         </Button>
       </DialogContent>

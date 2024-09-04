@@ -1,14 +1,17 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
-import ProposeMuiModal from '../components/MUIModal'
+import { CARD_WIDTH } from '../components/FindMatch/common'
+import PlayerAvailabilityCard from '../components/FindMatch/playerAvailabilityCard'
+import ProposeForm from '../components/FindMatch/proposeForm'
+import ProposeModalForm from '../components/FindMatch/proposeModalForm'
+import SearchForm from '../components/FindMatch/searchForm'
 import Nav from '../components/Nav'
-import ProposeCard from '../components/ProposeCard'
-import ProposeMatchForm from '../components/ProposeMatchForm'
-import ProposeUserSearch from '../components/ProposeUserSearch'
 import { useToast } from '../hooks'
 import { COURT_LIST } from '../utils/constants'
+import { DEFAULT_FIELD_DATE_FORMAT } from '../utils/dates'
+import { fetchWithErrorHandling, handleXhrError } from '../utils/xhrHelpers'
 
-import { Box, Button, Container, Grid } from '@material-ui/core'
+import { Box, Container, Grid, makeStyles, Paper, Tab, Tabs, Typography } from '@material-ui/core'
 import moment from 'moment'
 import io from 'socket.io-client'
 
@@ -16,6 +19,8 @@ const socket = io()
 
 const DEFAULT_STATE = {
   eventValue: '',
+  searchStartDate: moment(new Date()).format(DEFAULT_FIELD_DATE_FORMAT),
+  searchEndDate: moment(new Date()).add(14, 'days').format(DEFAULT_FIELD_DATE_FORMAT),
   newDate: '',
   startTime: '18:00',
   endTime: '19:00',
@@ -31,7 +36,7 @@ const DEFAULT_STATE = {
   eventLocation: '',
   eventTitle: '',
   modalShow: false,
-  subsectionShow: 'date',
+  tabIndex: 0,
   courtList: COURT_LIST
 }
 
@@ -45,18 +50,40 @@ const SKILL_LEVELS = {
   7: '4.5 - Advanced'
 }
 
-const ProposeMatch = () => {
+const useStyles = makeStyles((theme) => ({
+  tabRoot: {
+    flexGrow: 1,
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(3),
+    textAlign: 'center'
+  },
+  tabs: {
+    marginBottom: theme.spacing(2)
+  },
+  tabContent: {
+    padding: theme.spacing(2),
+    backgroundColor: theme.palette.background.default,
+    borderRadius: theme.shape.borderRadius
+  }
+}))
+
+const FindMatch = () => {
   const [state, setState] = useState(DEFAULT_STATE)
   const { showToast, savePendingToast } = useToast()
+  const classes = useStyles()
 
   const getDate = useCallback(() => {
     const currentDate = moment(new Date()).format('YYYY-MM-DD')
     const selectedDate = localStorage.getItem('selectedDate')
 
-    setState((prevState) => ({
-      ...prevState,
-      newDate: selectedDate > currentDate ? selectedDate : currentDate
-    }))
+    if (selectedDate > currentDate) {
+      setState((prevState) => ({
+        ...prevState,
+        searchStartDate: selectedDate,
+        searchEndDate: selectedDate
+      }))
+    }
+
     localStorage.removeItem('selectedDate')
   }, [])
 
@@ -73,29 +100,28 @@ const ProposeMatch = () => {
 
     setState((prevState) => ({ ...prevState, searchResult: searchArr }))
     showToast(
-      searchArr.length ? 'Availability found!' : 'No availability on this date.',
+      searchArr.length ? 'Players are available! :)' : 'No one is available. :(',
       searchArr.length ? 'success' : 'info'
     )
   }, [])
 
-  const handleDateFormSubmit = useCallback(
-    (event) => {
-      event?.preventDefault()
+  const handleSearchMatches = useCallback(
+    (_event) => {
+      const searchURL = `/api/calendar/propose?start_date=${state.searchStartDate}&end_date=${state.searchEndDate}`
 
-      const searchURL = `/api/calendar/propose?date=${state.newDate}`
-      fetch(searchURL)
+      fetchWithErrorHandling(searchURL)
         .then((res) => res.json())
         .then((res) => {
           transformSearchedData(res)
         })
-        .catch((err) => console.log(err))
+        .catch((error) => handleXhrError({ error, showToast }))
     },
     [state.newDate]
   )
 
   useEffect(() => {
     getDate()
-    handleDateFormSubmit()
+    handleSearchMatches()
   }, [])
 
   const setModalShow = useCallback((bVal) => {
@@ -120,6 +146,7 @@ const ProposeMatch = () => {
       setState((prevState) => ({
         ...prevState,
         modalShow: true,
+        newDate: moment(event.start).format('YYYY-MM-DD'),
         clickedResult: [event],
         eventLocation: location,
         eventTitle: event.title,
@@ -183,12 +210,12 @@ const ProposeMatch = () => {
       } = state
 
       const currentStartDate =
-        type === 'proposeMatchByAvailability'
+        type === 'FindMatchByAvailability'
           ? moment(`${newDate} ${startTimeHour}:${startTimeMinute}`, 'YYYY-MM-DD HH:mm').toDate()
           : moment(`${newDate} ${startTime}`, 'YYYY-MM-DD HH:mm').toDate()
 
       const currentEndDate =
-        type === 'proposeMatchByAvailability'
+        type === 'FindMatchByAvailability'
           ? moment(`${newDate} ${endTimeHour}:${endTimeMinute}`, 'YYYY-MM-DD HH:mm').toDate()
           : moment(`${newDate} ${endTime}`, 'YYYY-MM-DD HH:mm').toDate()
 
@@ -219,7 +246,7 @@ const ProposeMatch = () => {
             socket.emit('newMatchNotification', currentProposeToUserId)
 
             if (res.statusString === 'error') {
-              showToast(`Oops! ${res.error}`, 'error', 'error')
+              showToast(`Oops! ${res.error}`, 'error')
             } else {
               savePendingToast('Your request for a match has been sent!', 'success')
               window.location.assign('/scheduler')
@@ -231,46 +258,13 @@ const ProposeMatch = () => {
     [state]
   )
 
-  const subsectionRender = useCallback(() => {
-    if (state.subsectionShow === 'player') {
-      return (
-        <ProposeUserSearch
-          userSearch={state.userSearch}
-          handleNewChange={handleNewChange}
-          handleInputChange={handleInputChange}
-          handleProposeSubmit={handleProposeSubmit}
-          handleUsernameChange={handleUsernameChange}
-          userResults={state.userResults}
-          newDate={state.newDate}
-          startTimeHour={state.startTimeHour}
-          startTimeMinute={state.startTimeMinute}
-          endTimeHour={state.endTimeHour}
-          endTimeMinute={state.endTimeMinute}
-          eventLocation={state.eventLocation}
-          eventTitle={state.eventTitle}
-          startTime={state.startTime}
-          endTime={state.endTime}
-          eventValue={state.eventValue}
-        />
-      )
-    } else if (state.subsectionShow === 'date') {
-      return (
-        <ProposeMatchForm
-          handleInputChange={handleInputChange}
-          newDate={state.newDate}
-          handleFormSubmit={handleDateFormSubmit}
-        />
-      )
-    }
-  }, [state, handleNewChange, handleInputChange, handleProposeSubmit, handleUsernameChange, handleDateFormSubmit])
-
   const setSubShow = useCallback(
-    (event) => {
-      setState((_prevState) => ({ ...DEFAULT_STATE, subsectionShow: event.currentTarget.value }))
-
-      if (event.currentTarget.value === 'date') {
+    (_event, newTabIndex) => {
+      if (newTabIndex === 0) {
         getDate()
       }
+
+      setState((prevState) => ({ ...prevState, tabIndex: newTabIndex }))
     },
     [getDate]
   )
@@ -279,33 +273,74 @@ const ProposeMatch = () => {
     <div>
       <Nav />
       <Container fixed>
-        <Grid container spacing={3}>
+        <Grid container spacing={3} direction='column'>
           <Grid item xs={12} style={{ textAlign: 'center' }}>
-            <h2>Propose Match</h2>
+            <Typography variant='h2'>Propose Match</Typography>
           </Grid>
-          <Grid item xs={12} sm={6} style={{ textAlign: 'center' }}>
-            <Button variant='contained' color='primary' value='date' onClick={setSubShow}>
-              Search By Date
-            </Button>
-          </Grid>
-          <Grid item xs={12} sm={6} style={{ textAlign: 'center' }}>
-            <Button variant='contained' color='primary' value='player' onClick={setSubShow}>
-              Propose Match to Player
-            </Button>
-          </Grid>
+          <Grid item>
+            <Paper className={classes.tabRoot}>
+              <Tabs
+                value={state.tabIndex}
+                onChange={setSubShow}
+                centered
+                className={classes.tabs}
+                indicatorColor='primary'
+                textColor='primary'
+              >
+                <Tab label='Search By Date' />
+                <Tab label='Propose Match to Player' />
+              </Tabs>
 
-          {subsectionRender()}
+              {state.tabIndex === 0 && (
+                <Box className={classes.tabContent}>
+                  <SearchForm
+                    handleInputChange={handleInputChange}
+                    state={state}
+                    handleSearchMatches={handleSearchMatches}
+                  />
+                </Box>
+              )}
+              {state.tabIndex === 1 && (
+                <Box className={classes.tabContent}>
+                  <ProposeForm
+                    userSearch={state.userSearch}
+                    handleNewChange={handleNewChange}
+                    handleInputChange={handleInputChange}
+                    handleProposeSubmit={handleProposeSubmit}
+                    handleUsernameChange={handleUsernameChange}
+                    userResults={state.userResults}
+                    newDate={state.newDate}
+                    startTimeHour={state.startTimeHour}
+                    startTimeMinute={state.startTimeMinute}
+                    endTimeHour={state.endTimeHour}
+                    endTimeMinute={state.endTimeMinute}
+                    eventLocation={state.eventLocation}
+                    eventTitle={state.eventTitle}
+                    startTime={state.startTime}
+                    endTime={state.endTime}
+                    eventValue={state.eventValue}
+                  />
+                </Box>
+              )}
+            </Paper>
+          </Grid>
 
           <Grid item>
-            <Box display='flex' alignItems='center' justifyContent='center' flexWrap='wrap' style={{ gap: '10px' }}>
+            <Grid
+              style={{
+                display: 'grid',
+                'grid-template-columns': `repeat(auto-fill, minmax(${CARD_WIDTH}, 1fr))`,
+                gap: '10px'
+              }}
+            >
               {state.searchResult.map((event, i) => (
-                <ProposeCard key={i} event={event} eventIndex={i} handleEventClick={handleEventClick} />
+                <PlayerAvailabilityCard key={i} event={event} eventIndex={i} handleEventClick={handleEventClick} />
               ))}
-            </Box>
+            </Grid>
           </Grid>
 
           {state.clickedResult.map((event) => (
-            <ProposeMuiModal
+            <ProposeModalForm
               key={event.id}
               show={state.modalShow}
               onHide={() => setModalShow(false)}
@@ -321,4 +356,4 @@ const ProposeMatch = () => {
   )
 }
 
-export default ProposeMatch
+export default FindMatch
