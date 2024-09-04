@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useCallback } from 'react'
 
-import { CARD_WIDTH } from '../components/FindMatch/common'
 import Nav from '../components/Nav'
 import RequestCard from '../components/RequestCard'
 import { useToast } from '../hooks'
+import { CARD_WIDTH } from '../utils/constants'
 import { fetchWithErrorHandling, handleXhrError } from '../utils/xhrHelpers'
 
 import { Grid, Container, Typography } from '@material-ui/core'

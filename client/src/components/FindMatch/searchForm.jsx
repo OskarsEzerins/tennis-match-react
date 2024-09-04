@@ -13,7 +13,7 @@ const SearchForm = ({ state, handleInputChange, handleSearchMatches }) => {
       <form>
         <Grid container spacing={3}>
           <Grid item xs={12}>
-            <Box display='flex' style={{ gap: '10px' }}>
+            <Box display='flex' flexWrap='wrap' style={{ gap: '10px' }}>
               <TextField
                 label='Start Date'
                 name='searchStartDate'

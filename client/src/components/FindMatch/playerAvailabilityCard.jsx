@@ -1,14 +1,14 @@
 import React from 'react'
 
+import { CARD_WIDTH, CARD_WIDTH_SM } from '../../utils/constants'
 import { DEFAULT_CLOCK_FORMAT } from '../../utils/dates'
-import { CARD_WIDTH } from './common'
 
 import { makeStyles, Card, CardActions, CardContent, Button, Typography, Avatar, Grid } from '@material-ui/core'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     [theme.breakpoints.down('sm')]: {
-      minWidth: '80vw'
+      minWidth: CARD_WIDTH_SM
     },
     [theme.breakpoints.up('md')]: {
       width: CARD_WIDTH

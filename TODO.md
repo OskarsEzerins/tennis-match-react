@@ -1,10 +1,9 @@
-- Opt out of notifications
-
 - Add Discord bot:
 
   - Notifications for created availability
     - (Follow specific users)
   - Notifications for accepted matches
+  - Opt out of notifications
 
 - Calendar input the calendar popup icon in dark mode is invisible
 - Do not show in Find Match events to which proposals have been made

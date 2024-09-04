@@ -1,13 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 
-import { CARD_WIDTH } from '../components/FindMatch/common'
 import PlayerAvailabilityCard from '../components/FindMatch/playerAvailabilityCard'
 import ProposeForm from '../components/FindMatch/proposeForm'
 import ProposeModalForm from '../components/FindMatch/proposeModalForm'
 import SearchForm from '../components/FindMatch/searchForm'
 import Nav from '../components/Nav'
 import { useToast } from '../hooks'
-import { COURT_LIST } from '../utils/constants'
+import { CARD_WIDTH, COURT_LIST } from '../utils/constants'
 import { DEFAULT_FIELD_DATE_FORMAT } from '../utils/dates'
 import { fetchWithErrorHandling, handleXhrError } from '../utils/xhrHelpers'
 
