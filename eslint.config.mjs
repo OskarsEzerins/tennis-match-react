@@ -2,13 +2,15 @@ import js from '@eslint/js'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import reactPlugin from 'eslint-plugin-react'
 import globals from 'globals'
+import typescriptEslint from 'typescript-eslint'
 
 export default [
   {
-    files: ['client/**/*.{js,jsx,mjs,cjs}'],
+    files: ['client/**/*.{js,jsx,ts,tsx,mjs,cjs}'],
     ignores: ['client/src/App.test.js']
   },
   js.configs.recommended,
+  ...typescriptEslint.configs.recommended,
   eslintPluginPrettierRecommended,
   reactPlugin.configs.flat.recommended,
   {
@@ -31,7 +33,6 @@ export default [
         version: 'detect'
       }
     },
-
     rules: {
       'react/prop-types': 'off',
       'comma-dangle': ['error', 'only-multiline'],
@@ -60,7 +61,9 @@ export default [
           classes: true
         }
       ],
-      'arrow-body-style': 'off'
+      'arrow-body-style': 'off',
+      '@typescript-eslint/no-unused-vars': 'error',
+      '@typescript-eslint/no-require-imports': 'off'
     }
   }
 ]

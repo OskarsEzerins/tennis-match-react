@@ -2,15 +2,15 @@ require('dotenv').config()
 
 module.exports = {
   development: {
-    username: process.env.db_username,
-    password: process.env.db_password,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
     database: 'express_tennis_development',
     host: 'localhost',
     dialect: 'postgres'
   },
   test: {
-    username: process.env.db_username,
-    password: process.env.db_password,
+    username: process.env.DB_USERNAME,
+    password: process.env.DB_PASSWORD,
     database: 'express_tennis_test',
     host: 'localhost',
     dialect: 'postgres',

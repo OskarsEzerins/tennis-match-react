@@ -1,0 +1,21 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "baseUrl": "",
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "esModuleInterop": true,
+    "lib": ["ESnext", "dom"],
+    "module": "ESnext",
+    "moduleResolution": "node",
+    "noEmit": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "target": "ESnext",
+    "strict": true
+  },
+  "include": ["./discord/**/*.ts"],
+  "exclude": ["app/**/*.js", "**/*.spec.ts", "node_modules", "public"]
+}
