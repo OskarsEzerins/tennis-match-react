@@ -106,7 +106,7 @@ const FindMatch = () => {
 
   const handleSearchMatches = useCallback(
     (_event) => {
-      const searchURL = `/api/calendar/propose?start_date=${state.searchStartDate}&end_date=${state.searchEndDate}`
+      const searchURL = `api/calendar/propose?start_date=${state.searchStartDate}&end_date=${state.searchEndDate}`
 
       fetchWithErrorHandling(searchURL)
         .then((res) => res.json())
@@ -177,7 +177,7 @@ const FindMatch = () => {
     setState((prevState) => ({ ...prevState, eventValue: newValue }))
 
     try {
-      const searchURL = `/api/username?username=${newValue}`
+      const searchURL = `/api/users?username=${newValue}`
       const response = await fetch(searchURL)
       const userResults = await response.json()
 

@@ -1,13 +1,14 @@
 require('dotenv').config()
-var express = require('express')
-var session = require('express-session')
-var app = express()
+const express = require('express')
+const session = require('express-session')
+const app = express()
 const server = require('http').createServer(app)
 const io = require('socket.io')(server)
 const path = require('path')
-var db = require('./models')
+const fs = require('fs')
+const db = require('./server/models')
 
-var PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001
 
 // NOTE: socket io initialization for chat
 io.on('connection', (socket) => {
@@ -71,8 +72,7 @@ if (process.env.NODE_ENV === 'production') {
 
 app.use(
   session({
-    // TODO: replace
-    secret: 'tennis123',
+    secret: process.env.SESSION_SECRET,
     resave: true,
     saveUninitialized: true,
     cookie: {
@@ -81,13 +81,21 @@ app.use(
   })
 )
 
-// Routes
-require('./routes/apiRoutes')(app)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, './client/build/index.html'))
+const routesPath = path.join(__dirname, 'server', 'routes')
+fs.readdirSync(routesPath).forEach(function (file) {
+  if (file.endsWith('.js')) {
+    const route = require(path.join(routesPath, file))
+    app.use('/api', route)
+  }
 })
 
-var syncOptions = { force: false }
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, './client/build/index.html'))
+  })
+}
+
+const syncOptions = { force: false }
 
 // NOTE: If running a test, set syncOptions.force to true, clearing the `test db`
 if (process.env.NODE_ENV === 'test') {

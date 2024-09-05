@@ -62,8 +62,8 @@ export default [
         }
       ],
       'arrow-body-style': 'off',
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-require-imports': 'off'
+      '@typescript-eslint/no-require-imports': 'off',
+      '@typescript-eslint/no-unused-vars': 'off'
     }
   }
 ]

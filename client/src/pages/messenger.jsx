@@ -115,7 +115,7 @@ const Messenger = ({ classes }) => {
 
   // TODO:
   const handleUserSearch = (event) => {
-    fetch('api/username?username=' + event.target.value)
+    fetch('api/users?username=' + event.target.value)
       .then((res) => res.json())
       .then((users) => {
         setUsers(users)
@@ -200,7 +200,7 @@ const Messenger = ({ classes }) => {
 
   const handleUsernameChange = (event, newValue) => {
     setUserSearch(newValue)
-    fetch('/api/username?username=' + newValue)
+    fetch('/api/users?username=' + newValue)
       .then((res) => res.json())
       .then((res) => {
         setUsers(res)

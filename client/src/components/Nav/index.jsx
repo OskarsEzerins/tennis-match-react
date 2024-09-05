@@ -47,7 +47,7 @@ const Nav = () => {
   ]
 
   const handleLogout = async () => {
-    await fetch('/logout')
+    await fetch('/api/logout')
     savePendingToast('You have been logged out', 'info')
     window.location.href = '/'
   }
