@@ -1,9 +1,4 @@
-- Add Discord bot:
-
-  - Notifications for created availability
-    - (Follow specific users)
-  - Notifications for accepted matches
-  - Opt out of notifications
+- Notifications for new proposals, accepted/denied matches
 
 - Calendar input the calendar popup icon in dark mode is invisible
 - Do not show in Find Match events to which proposals have been made
@@ -13,8 +8,10 @@
 - Add tennis courts info
   - Add a map with preselect places and info about places
 - Add a mehanism to mark when a court is reserved
+- Friends system
 - Allow to select multiple courts
 - Add Drawer logic to Nav notifications (websocket)
 - Add a better way to see all other player availability
 - Add double matches
 - Add tournaments
+- Varētu pielikt automatiskus laikapstaklu pazinojumus/info, ja ir āra korti.

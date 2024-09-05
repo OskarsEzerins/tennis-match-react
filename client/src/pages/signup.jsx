@@ -35,7 +35,7 @@ const Signup = () => {
       email: signupEmail
     }
 
-    fetch('/api', {
+    fetch('/api/sign_up', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

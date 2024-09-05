@@ -63,7 +63,7 @@ const Profile = () => {
     }
 
     try {
-      await fetch('/api/profileupdate', {
+      await fetch('/api/profile', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json'

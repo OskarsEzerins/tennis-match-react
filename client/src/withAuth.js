@@ -12,7 +12,7 @@ export default function withAuth(ComponentToProtect) {
       }
     }
     componentDidMount() {
-      fetch('/api/checklogin')
+      fetch('/api/validate_user_login')
         .then((res) => {
           if (res.status === 200) {
             this.setState({ loading: false })
